@@ -1,0 +1,6 @@
+EXCLUDEFILE
+resources/readme.gif
+make.bat
+*.zip
+README.md
+.git
