@@ -1,70 +1,110 @@
+/*
 
+    File: Ingredients.js
+    Purpose: 
+
+      [] - List all ingredients from all recipes
+
+      [] - The list should automatically add measurement values together for the same product 
+           if it gets used in two or more recipes
+
+*/
+
+//This dictionary holds all the information received from wit.ai
 var dict = {};
 
+// This is the second parsing phase of the wit.ai request.
+// Once wit has sent its parse of the ingredient we can make educated decisions on how to categorize data.
+// This function will create add or update something in the dictionary
 function GenerateRow(res)
 {
   
+  //If the result from wit is blank or undefined then just terminate the function call
   if(res == null || res == undefined)
   {
     return;
   }
 
+  // The name of an ingredient in the recipe
   var product = undefined;
-  var measurement = "whole";//originally undefined
-  var amount = 1;//originally undefined
-  var note = "";
-  var quantity_measurement = "whole";
-  var quantity_amount = 1;
 
+  // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
+  // Example: 1 tomato is just a whole tomato.
+  // Note: Originally undefined
+  var measurement = "whole";
+  
+  // The amount of the measurement
+  // Note: Originally undefined
+  var amount = 1;
+  
+  // TODO: this isnt being used yet
+  var note = "";
+  
+  // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
+  // Example: 1 tomato is just a whole tomato.
+  // Note: Originally undefined
+  // Amount and Quantity are synonymous.
+  var quantity_measurement = "whole";
+  
+  // The amount of the measurement
+  // Note: Originally undefined
+  // Amount and Quantity are synonymous.
+  var quantity_amount = 1;
+  
+  // This keeps track of whether wit found an "amount" entity.
   var amount_found = false;
+  
+  // This keeps track of whether wit found a "quanitity" entity.
   var quantity_found = false;
   
-  //console.log(res.entities[0]/*+ " " + res.entities.measurement + " " + res.entities.product*/)
+  // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) {
-    //console.log(res.entities[key][0].name)
     
     var entity_name = res.entities[key][0].name;
     var entity_value = res.entities[key][0].value;
-    console.log(res.entities[key][0]);
 
+    // Check which entity name was received
     if(entity_name == "measurement")
     {
-      //console.log(entity[0].value);
       measurement = entity_value;
     }
     else if(entity_name == "product")
     {
       product = entity_value;
-      //console.log(entity[0].value);
     }
     else if(entity_name == "wit$quantity")
     {
-      //problem could exist here where quantity and measurement are in the same query
+      //  Note: 
+      //  Problem could exist here where quantity and measurement are in the same query.
+      //  The quantity entity has both unit and value fields.
+      //  Treating quantity and measurement/amount synonymous is currently a bug on the wit.ai side.
       quantity_measurement = res.entities[key][0].unit;
-
       quantity_amount = entity_value;
-
       quantity_found = true;
     }
     else if(entity_name == "note")
     {
       note = entity_value;
     }
-    else //wit$number, amount, just numbers for now
+    else 
     {
+      //  Note:
+      //  This else case catches any other entities. Mostly just wit$number and amount. Only numbers for now.
       amount_found = true;
       amount = entity_value;
-      //console.log(entity[0].value);
     }
 
-    //This is where i need to figure out an algorithm to mix this data together
-    // text_area.value += 
-    
-    //console.log(dict);
   });
 
-  //logic is needed to see if quanity and amount were found in query
-  //there should be a strategy to find best solution
+  //  _                     _       _     _ 
+  // | |                   | |     (_)   | |
+  // | |__   __ _ _ __   __| | __ _ _  __| |
+  // | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
+  // | |_) | (_| | | | | (_| | (_| | | (_| |
+  // |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
+  // 
+  // Logic is needed to see if quantity and amount were found in query
+  // PROBLEM: There should be a strategy to find best solution. The current solution is a bandaid.
   if(quantity_found && amount_found && (quantity_amount != amount))
   {
     measurement = quantity_measurement;
@@ -77,45 +117,44 @@ function GenerateRow(res)
   }
   else if(amount_found)
   {
-    //nothing?
+    // Nothing currently
   }
-  else // neither was found
+  else 
   {
-    //nothing?
+    // Nothing currently
   }
 
-
-  if(!(product in dict)/*dict[product] == undefined*/)
+  // Add product to dictionary with the measurement and amount if its not in the dictionary
+  if(!(product in dict))
   {
     dict[product] = {[measurement] : amount};
-    // dict[product] = '• ' + amount + " " + measurement;
   }
   else
   {
+    // Check if the measurement has already been added into the dictionary
     if(measurement in dict[product])
     {
-      //PROBLEM: dangerous to just add amount without checking it
+      // PROBLEM: dangerous to just add amount without checking it
       (dict[product])[measurement] += amount
     }
     else
     {
+      // Add new measurement to existing product
       (dict[product])[measurement] = amount;
     }
-    //dict[product] = dict[product] + "\n• " + amount + " " + measurement;  
-
   }
-
-  // Object.keys(dict).forEach(function(key) {
-  //   console.log(key+ " = " + dict[key]);
-  //   text_area.value += key+ " = " + dict[key] + "\n";
-  // });
     
 };
 
+// This function makes a single request to wit.ai
 function WitRequest(ingredient_string) 
 {
-  const q = encodeURIComponent(ingredient_string);//'2 tablespoon apple');
-  //Keys needed to run this
+  // This is the ingredient string
+  // Example: "3 cups of honey"
+  const q = encodeURIComponent(ingredient_string);
+  
+  // Keys needed to run this. Keeping this data in private for now.
+  // HTTP request for wit.ai to parse the ingredient string
   const uri = undefined;
   const auth = undefined;
   fetch(uri, {headers: {Authorization: auth}})
@@ -126,129 +165,99 @@ function WitRequest(ingredient_string)
       )
 };
 
-
-
+// Text area displays the ingredients 
 var text_area = document.getElementById('ingredientsDescription');
-
+// Back button to go back
 var back_btn = document.getElementById('back');
 
+// Go back to the default page
 back_btn.onclick = function(element) 
 {
     window.location.href="../views/popup.html"
 };
 
+// Get the number of recipes stored in local storage
 chrome.storage.sync.get('number_of_recipes', function(data) {
+
+  // The number of recipes in storage
   var number_of_recipes = data.number_of_recipes;
-  console.log("number_of_recipes:"+number_of_recipes);
-  
+  // The list of all recipes
   var recipe_list = [];
+
+  // Iterate through the list of recipes
   for(var i = 0;i< number_of_recipes; i++)
   {
-      console.log("iteration:"+i);
-      var recipe_id_string = 'recipe_id_' + (i+1);
-      recipe_list.push(recipe_id_string);
+    // Dynamically generate the recipe id string
+    var recipe_id_string = 'recipe_id_' + (i+1);
+
+    // Adding each recipe id to the recipe list
+    recipe_list.push(recipe_id_string);
   }
 
+  // Set text area to be blank
+  text_area.value = "";
 
-          text_area.value = "";
-          //Variables cannot be used as keys without using computed keys, new in ES6.
-          chrome.storage.sync.get(recipe_list , function(data) 
-          {
-              Object.keys(data).forEach(key => {
+  //Variables cannot be used as keys without using computed keys, new in ES6.
+  //
+  // Get the recipe list out of local storage
+  chrome.storage.sync.get(recipe_list , function(data) 
+  {
 
-                  var temp_recipe_id_string = key;//recipe_id_string;
+    // Iterate through each recipe
+    Object.keys(data).forEach(key => {
 
-                  //console.log(key, data[key]);
-                  
-                  //console.log(data[key].recipe_description);
+      // Parse each ingredient by the return character
+      var each_ingredient = data[key].recipe_description.split('\n');
 
-                  var each_ingredient = data[key].recipe_description.split('\n');
-
-                  each_ingredient.forEach( row => {
-                    WitRequest(row);
-                  });
-
-                  //text_area.value += data[key].recipe_description+"\n";
-                
-                });
+      // Make a wit.ai request for each ingredient
+      each_ingredient.forEach( row => {
+        WitRequest(row);
       });
+      
+    });
+
+  });
+
 });
 
-
-// var show_ingredients_btn = document.getElementById('showIngredients');
-// var show_recipes_btn = document.getElementById('showRecipes');
-
-
-// let changeColor = document.getElementById('changeColor');
-
-// chrome.storage.sync.get('color', function(data) {
-//   changeColor.style.backgroundColor = data.color;
-//   changeColor.setAttribute('value', data.color);
-// });
-
-// function onExecuted(result) {
-//     console.log(`We made it a color`);
-// };
-
-// function popup() {
-//     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-//     var activeTab = tabs[0];
-//     chrome.tabs.sendMessage(activeTab.id, { doSkip: true })
-//    });
-// }
-
-//  changeColor.onclick = function(element) {
-//   let color = element.target.value;
-//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//         chrome.storage.sync.set({color: 'red'}, function() {
-//             changeColor.style.backgroundColor = 'red'
-//             changeColor.setAttribute('value', 'red');
-//         });
-      
-//         chrome.tabs.executeScript( null, 
-//         {code:"document.body.style.backgroundColor = 'red';" },
-//         function(results){ chrome.extension.getBackgroundPage().console.log(results); } );
-    
-//         popup();
-//     });
-// };
-
+// Listener for content script message or backgorund script message
 chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
+    
+  function(request, sender, sendResponse) {
+
       console.log(sender.tab ?
                   "from a content script:" + sender.tab.url :
                   "from the extension");
-    //   if (request.greeting == "hello")
-    //     sendResponse({farewell: "goodbye"});
-    var test= document.getElementById('recipe');
-    test.textContent = request.food_list;
-    }
-  );
+  }
 
+);
 
-//   // To permanently change a popup while it is closed:
-
-//   // chrome.browserAction.setPopup({popup: "new.html"});
-//   // If you want to temporary change a popup while it is still open:
-  
-//   // window.location.href="new.html";
-// show_ingredients_btn.onclick = function(element) {
-//   window.location.href="ingredients.html"
-// };
-
-// show_recipes_btn.onclick = function(element) {
-//   window.location.href="recipes.html"
-// };
-
+//  _                     _       _     _ 
+// | |                   | |     (_)   | |
+// | |__   __ _ _ __   __| | __ _ _  __| |
+// | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
+// | |_) | (_| | | | | (_| | (_| | | (_| |
+// |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
+// 
+// Description: This timeout is here as a band aid to a problem where I need a couple seconds
+// to receive http request responses from wit.ai. I just need to use promises instead.                            
 setTimeout(() => {
+
+  // Iterate through the dictionary of recipe information
   Object.keys(dict).forEach(function(key) {
-    //console.log(key+ " = " + dict[key]);
+
+    // Insert product name into the grocery list text area
     text_area.value += key + "\n"
-    //dict[product] = dict[product] + "\n• " + amount + " " + measurement;  
+
+    // Iterate through each measurement of the product
     Object.keys(dict[key]).forEach(function(second_key){
-      console.log(dict[key]);
+      // Insert number of measurements for the product
       text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
     });
+
+    // Move on to the next ingredient
     text_area.value += "\n";
+
   })
+
 }, 6000);

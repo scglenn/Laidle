@@ -1,3 +1,13 @@
+/*
+
+    File: Recipe_list.js
+    Purpose: 
+
+      [] - The purpose of this page is view the recipes in local storage
+
+      [] - Recipes can be added/edited/removed
+
+*/
 
 chrome.storage.sync.get('number_of_recipes', function(data) {
     var number_of_recipes = data.number_of_recipes;

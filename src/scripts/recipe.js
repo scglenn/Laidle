@@ -1,65 +1,111 @@
+/*
+
+    File: Recipe.js
+    Purpose: 
+
+      [] - The purpose of this page is add the recipe to local storage
+
+*/
+
+// Adding recipe button
 var add_btn = document.getElementById('add');
+
+// Going back a page
 var back_btn = document.getElementById('back');
+
+// The area for recipe ingredients/details to be added. 
+// Expecting data to be copy/pasted into the browser.
 var text_area = document.getElementById('recipeDescription');
+
+// The name of the recipe
 var recipeName = document.getElementById('recipeName');
 
-
+// When add button is clicked all changes are saved
+// The user is redirected to the recipe list page
 add_btn.onclick = function(element) 
 {
     saveChanges();
     window.location.href="../views/recipe_list.html"
 };
 
+//  When the back button the user is redirected to the recipe list page
 back_btn.onclick = function(element) 
 {
     window.location.href="../views/recipe_list.html"
 };
 
-const queryString = window.location.search;//window.location.href;
+
+//  _                     _       _     _ 
+// | |                   | |     (_)   | |
+// | |__   __ _ _ __   __| | __ _ _  __| |
+// | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
+// | |_) | (_| | | | | (_| | (_| | | (_| |
+// |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
+// 
+// Note:
+// This functionality was added here in the case of the user wanting to update an existing recipe
+// If the url has search params passed to it from the previous page then that data will be used.
+// 
+// Questions:
+// Probably going to need to pull the recipe id also so we know which one to update
+// Unless it doesnt have an id in which case its a new recipe
+const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
+
+// Recipe name
 var rec_name = urlParams.get('recipe_name');
-console.log(rec_name);
+
+// Recipe description
 var rec_description = urlParams.get('recipe_description');
-console.log(rec_description);
+
+// Recipe ID
 var rec_id = urlParams.get('recipe_id');
-console.log(rec_id);
 
-//probably going to need to pull the recipe id also so we know which one to update
-//unless it doesnt have an id in which case its a new recipe
-
+// Update the recipe name field at the top of the page with the recipe name passed
+// from the previous page
 recipeName.value = rec_name;
+
+// Update the recipe description text area with the recipe description from local storage
 text_area.innerHTML = rec_description;
 
-function saveChanges() {
-    
+
+// This fucntion saves the recipe data from this page into local storage.
+function saveChanges() 
+{   
+    // Grab the latest text area value
     var recipe_description = text_area.value;
+
+    // Grab the latest recipe name value
     var recipe_name = recipeName.value;
+
+    // Recipe description is required
     if (!recipe_description) {
-      message('Error: No value specified');
-      return;
+        message('Error: No value specified');
+        return;
     }
 
+    // Recipe name is required
     if (!recipe_name) {
         message('Error: No value specified');
         return;
     }
 
-    console.log("whats going on with rec id"+rec_id);
+    // TODO: Leaving this here for now
+    console.log("whats going on with rec id" + rec_id);
+
+    // if the recipe id doesnt exist then 
     if(rec_id == "undefined")
     {
         chrome.storage.sync.get('number_of_recipes', function(data) {
             var num_of_recipes = data.number_of_recipes+1;
             var recipe_id_string = 'recipe_id_' + num_of_recipes;
-    
+
+            // Increase the number of recipes stored in local storage
             chrome.storage.sync.set({'number_of_recipes' : num_of_recipes}, function() {
                 // Notify that we saved.
                 //message('Settings saved');
             });
-    
-            console.log("Adding new recipe:");
-            console.log("num_of_recipes:"+ num_of_recipes);
-            console.log("recipe_name:"+recipe_name);
-            console.log("recipe_description:" + recipe_description);
+
             // Save it using the Chrome extension storage API.
             //Variables cannot be used as keys without using computed keys, new in ES6.
             chrome.storage.sync.set({[recipe_id_string] : {recipe_name,recipe_description}}, function() {
@@ -70,50 +116,15 @@ function saveChanges() {
     }
     else
     {
+        //Update existing recipe id with recipe name and/or recipe description changes
         chrome.storage.sync.set({[rec_id] : {recipe_name,recipe_description}}, function() {
             // Notify that we saved.
             //message('Settings saved');
         });
     }
-    
-  }
+}
 
-
-
-// let changeColor = document.getElementById('changeColor');
-
-// chrome.storage.sync.get('color', function(data) {
-//   changeColor.style.backgroundColor = data.color;
-//   changeColor.setAttribute('value', data.color);
-// });
-
-// function onExecuted(result) {
-//     console.log(`We made it a color`);
-// };
-
-// function popup() {
-//     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-//     var activeTab = tabs[0];
-//     chrome.tabs.sendMessage(activeTab.id, { doSkip: true })
-//    });
-// }
-
-//  changeColor.onclick = function(element) {
-//   let color = element.target.value;
-//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-//         chrome.storage.sync.set({color: 'red'}, function() {
-//             changeColor.style.backgroundColor = 'red'
-//             changeColor.setAttribute('value', 'red');
-//         });
-      
-//         chrome.tabs.executeScript( null, 
-//         {code:"document.body.style.backgroundColor = 'red';" },
-//         function(results){ chrome.extension.getBackgroundPage().console.log(results); } );
-    
-//         popup();
-//     });
-// };
-
+// Listener for receiving messages from the extension or content script
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
       console.log(sender.tab ?
@@ -125,18 +136,3 @@ chrome.runtime.onMessage.addListener(
     test.textContent = request.food_list;
     }
   );
-
-
-//   // To permanently change a popup while it is closed:
-
-//   // chrome.browserAction.setPopup({popup: "new.html"});
-//   // If you want to temporary change a popup while it is still open:
-  
-//   // window.location.href="new.html";
-// show_ingredients_btn.onclick = function(element) {
-//   window.location.href="ingredients.html"
-// };
-
-// show_recipes_btn.onclick = function(element) {
-//   window.location.href="recipes.html"
-// };

@@ -1,19 +1,34 @@
-//Testing the ability to store and set variables
+/*
+
+    File: background.js
+    Purpose: 
+
+      [] - Background scripts are registered in the manifest under the "background" field. 
+           They are listed in an array after the "scripts" key, and "persistent" should be specified as false.
+
+      [] - Set up listeners
+
+*/
+
+// Initialize the extension on install
 chrome.runtime.onInstalled.addListener(function() {
+
+  //Store the color variable in local storage
   chrome.storage.sync.set({color: '#3aa757'}, function() {
     console.log("The color is green.");
   });
 
+  //Store the number_of_recipes variable in local storage
   chrome.storage.sync.set({number_of_recipes: 1}, function(){
     console.log("number of recipes = 1");
   });
 
+  //Store the first recipe in local storage in order to seed the user data
   chrome.storage.sync.set({'recipe_id_1': {recipe_name: "Pizza",recipe_description: "1 cup of cheese"}}, function(){
     console.log("created recipe 1");
   });
 
-  // chrome.storage.sync.set({})
-
+  //TODO: What does this function call do? What is its purpose?
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
@@ -42,6 +57,8 @@ const setBadge = bool => {
   const text = { text: bool ? 'Skip!' : '' }
   chrome.browserAction.setBadgeText(text)
 }
+
+// Set badge background color
 chrome.browserAction.setBadgeBackgroundColor({ color: '#808000' })
 
 // On page navigation
