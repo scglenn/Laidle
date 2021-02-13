@@ -1,0 +1,61 @@
+body
+{
+
+    background-color: #171b26;
+
+    /* background-color: transparent; */
+    /* light color #343e56 */
+    /* mediu color #293143 */
+    /* dark color #576170; */
+    border-radius: 2em;
+}
+
+#mainMenu
+{
+    background-color: #343e56;
+    padding: 2em;
+    margin: 1em;
+    height: 35em;
+    border-radius: 2em;
+}
+
+#showIngredients
+{
+    background-color: #47c2be;
+    color: #343e56;
+    border-color: #47c2be;
+
+}
+
+#showIngredients:hover 
+{
+    /* color: #576170; */
+    background-color: #343e56;
+    border-color: #47c2be;
+    color: #47c2be;
+
+}
+
+#showRecipes
+{
+    background-color: #576170;
+    color: white;
+    border-color: #576170;
+}
+
+#showRecipes:hover 
+{
+    color: white;
+    background-color: #293143;
+    border-color: #293143;
+}
+
+#logo
+{
+    /* height: 23em; */
+    height: auto;
+    width: 100%;
+    border-radius: 2em;
+    background-color: white;
+    margin-bottom: 1em;
+}

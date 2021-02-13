@@ -8,6 +8,7 @@
     <!-- Boostrap 4 CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     
+    <link rel="stylesheet" href="../stylesheets/popup.css" >
 
     <style>
 
@@ -27,10 +28,16 @@
     </style>
   </head>
   <body>
-    <button id="changeColor"></button>
-    <div id="recipe">sfdsfdsfd</div>
-    <button type="button" id="showIngredients" class="btn btn-primary btn-lg btn-block">Show Grocery List</button>
-    <button type="button" id="showRecipes" class="btn btn-secondary btn-lg btn-block">Show Recipes</button>
+    <!-- <button id="changeColor"></button> -->
+    <!-- <div id="recipe">sfdsfdsfd</div> -->
+    <div id="mainMenu">
+      <img id="logo" src = "../../resources/First_attempt.png"
+      alt = "Laidle Logo" height = "250" width = "270"/>
+      <div id="menuButtons">
+        <button type="button" id="showIngredients" class="btn btn-primary btn-lg btn-block">Show Grocery List</button>
+        <button type="button" id="showRecipes" class="btn btn-secondary btn-lg btn-block">Show Recipes</button>    
+      </div>
+    </div>
     <script src="../scripts/popup.js"></script>
     <!-- Boostrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

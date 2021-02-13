@@ -155,8 +155,8 @@ function WitRequest(ingredient_string)
   
   // Keys needed to run this. Keeping this data in private for now.
   // HTTP request for wit.ai to parse the ingredient string
-  const uri = undefined;
-  const auth = undefined;
+  const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
+  const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
   fetch(uri, {headers: {Authorization: auth}})
       .then(res => res.json()
       )

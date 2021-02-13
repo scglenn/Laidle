@@ -1,0 +1,22 @@
+body
+{
+    /* background-color: #47c2be; */
+    background-color: #171b26;
+    /* light color #343e56 */
+    /* mediu color #293143 */
+    /* dark color #576170; */
+}
+
+label
+{
+    color: #47c2be;
+}
+
+#mainMenu
+{
+    background-color: #343e56;
+    padding: 2em;
+    margin: 1em;
+    height: 35em;
+    border-radius: 2em;
+}

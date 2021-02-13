@@ -14,18 +14,18 @@ var show_ingredients_btn = document.getElementById('showIngredients');
 var show_recipes_btn = document.getElementById('showRecipes');
 
 // for testing purposes only
-let changeColor = document.getElementById('changeColor');
+// let changeColor = document.getElementById('changeColor');
 
 // for testing purposes only
-chrome.storage.sync.get('color', function(data) {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute('value', data.color);
-});
+// chrome.storage.sync.get('color', function(data) {
+//   changeColor.style.backgroundColor = data.color;
+//   changeColor.setAttribute('value', data.color);
+// });
 
 // for testing purposes only
-function onExecuted(result) {
-    console.log(`We made it a color`);
-};
+// function onExecuted(result) {
+//     console.log(`We made it a color`);
+// };
 
 // This function sends the doSkip message to the content.js page
 function popup() {
@@ -36,21 +36,21 @@ function popup() {
 }
 
 // for testing purposes only
-changeColor.onclick = function(element) {
-  let color = element.target.value;
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.storage.sync.set({color: 'red'}, function() {
-            changeColor.style.backgroundColor = 'red'
-            changeColor.setAttribute('value', 'red');
-        });
+// changeColor.onclick = function(element) {
+//   let color = element.target.value;
+//   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+//         chrome.storage.sync.set({color: 'red'}, function() {
+//             changeColor.style.backgroundColor = 'red'
+//             changeColor.setAttribute('value', 'red');
+//         });
       
-        chrome.tabs.executeScript( null, 
-        {code:"document.body.style.backgroundColor = 'red';" },
-        function(results){ chrome.extension.getBackgroundPage().console.log(results); } );
+//         chrome.tabs.executeScript( null, 
+//         {code:"document.body.style.backgroundColor = 'red';" },
+//         function(results){ chrome.extension.getBackgroundPage().console.log(results); } );
     
-        popup();
-    });
-};
+//         popup();
+//     });
+// };
 
 // Listener for receiving a message from the extension or content scripts
 chrome.runtime.onMessage.addListener(
