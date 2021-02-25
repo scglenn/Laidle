@@ -260,4 +260,11 @@ setTimeout(() => {
 
   })
 
+  // Make menu visible
+  document.getElementById('mainMenu').style.visibility = "visible";
+
+  // Make loading div hidden
+  document.getElementById('loading-wrapper').style.visibility = "hidden";
+
+
 }, 6000);

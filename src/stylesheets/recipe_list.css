@@ -19,4 +19,72 @@ body
 #add
 {
     margin-top: 2em;
+    background-color: #47c2be;
+    color: #343e56;
+    border-color: #47c2be;
+
+}
+
+#add:hover 
+{
+    /* color: #576170; */
+    background-color: #343e56;
+    border-color: #47c2be;
+    color: #47c2be;
+
+}
+
+#back
+{
+    background-color: #576170;
+    color: white;
+    border-color: #576170;
+}
+
+#back:hover 
+{
+    color: white;
+    background-color: #293143;
+    border-color: #293143;
+}
+
+#recipeList
+{
+    background-color: #fff4b4;
+    /* background-image: url("/resources/notepad.jpg"); */
+}
+
+.editButton
+{
+    background-color: #47c2be;
+    color: #343e56;
+    border-color: #47c2be;
+    width: 50%;
+}
+
+.editButton:hover
+{
+    background-color: #fff4b4;
+    border-color: #47c2be;
+    color: #47c2be;
+}
+.removeButton
+{
+    background-color: #576170;
+    color: white;
+    border-color: #576170;
+    width: 50%;
+}
+
+.removeButton:hover 
+{
+    color: white;
+    background-color: #293143;
+    border-color: #293143;
+}
+
+.recipeRow
+{
+    text-align: center;
+    margin: 1em;
 }

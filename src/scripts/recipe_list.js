@@ -73,7 +73,7 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
             console.log(key, data[key]);
 
             // Create p tag that has the recipes name + edit/remove buttons
-            var fragment = create("<p>" + data[temp_recipe_id_string].recipe_name + "</p><button id='edit"+'_'+temp_recipe_id_string+"' type='button' class='btn btn-outline-primary'>Edit</button><button id='remove"+'_'+temp_recipe_id_string+"' type='button' class='btn btn-outline-secondary'>Remove</button>"); 
+            var fragment = create("<p class='recipeRow'>" + data[temp_recipe_id_string].recipe_name + "<br><button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button><button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button></p>"); 
     
             // Insert the p tag into the document body
             document.getElementById('recipeList').insertBefore(fragment, document.getElementById('recipeList').childNodes[0]);
@@ -87,8 +87,11 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
             //  This should fill the recipe page and send the user to recipe.html
             edit_btn.onclick = function(element) 
             {
+                // This ensures that return characters are retained in the string when passed via URL
+                var temp = encodeURIComponent(data[temp_recipe_id_string].recipe_description);
+
                 // Params are used in url as a way to transfer data between pages
-                window.location.href="../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+data[temp_recipe_id_string].recipe_description+"&recipe_id="+temp_recipe_id_string+"";
+                window.location.href="../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp /*data[temp_recipe_id_string].recipe_description*/+"&recipe_id="+temp_recipe_id_string+"";
             };
 
             //  This should remove the recipe data and reload recipe_list.html

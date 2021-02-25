@@ -68,7 +68,6 @@ recipeName.value = rec_name;
 // Update the recipe description text area with the recipe description from local storage
 text_area.innerHTML = rec_description;
 
-
 // This fucntion saves the recipe data from this page into local storage.
 function saveChanges() 
 {   

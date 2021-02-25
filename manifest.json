@@ -23,7 +23,7 @@
     }
   ],
 
-  "description": "Laidle is a Chrome extension that generates a comprehensive grocery list from recipes collected in browser! Artificial intelligence is used to parse the ingredients of each recipe into a clean list that is easy to shop with!",
+  "description": "Laidle is a Chrome extension that generates a comprehensive grocery list from recipes collected in browser!",
   "icons": {
     "16": "resources/icon16.png",
     "48": "resources/icon48.png",

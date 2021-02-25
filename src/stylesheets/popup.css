@@ -58,4 +58,5 @@ body
     border-radius: 2em;
     background-color: white;
     margin-bottom: 1em;
+    background-image: url("/resources/notepad.jpg");
 }
