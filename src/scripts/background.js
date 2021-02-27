@@ -28,6 +28,20 @@ chrome.runtime.onInstalled.addListener(function() {
     console.log("created recipe 1");
   });
 
+  //Store the page that is going to be loaded after losing focus
+  chrome.storage.sync.set({page_on_load: 'popup.html'}, function(){
+    console.log("page on load is popup.html");
+  });
+
+  
+  chrome.storage.sync.set({recipe_title: undefined}, function(){
+        
+  });
+
+  chrome.storage.sync.set({recipe_description: undefined}, function(){
+      
+  });
+
   //TODO: What does this function call do? What is its purpose?
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
@@ -39,8 +53,6 @@ chrome.runtime.onInstalled.addListener(function() {
     }]);
   });
 });
-
-
 
 // Check tab if skippable
 const doCheck = tabid => {
@@ -70,3 +82,9 @@ chrome.tabs.onUpdated.addListener((tabid, changeInfo, tab) => {
 chrome.tabs.onActivated.addListener(activeInfo => {
   doCheck(activeInfo.tabId)
 })
+
+function mySaveFunction(data){
+  console.log("my save function");
+};
+
+console.log("background script");

@@ -174,6 +174,15 @@ var back_btn = document.getElementById('back');
 back_btn.onclick = function(element) 
 {
     window.location.href="../views/popup.html"
+
+  // Find the current html page in order to know which data needs to be saved.
+  //var path = window.location.pathname;
+  var page = "popup.html";//path.split("/").pop();
+  
+  //Store the page that is going to be loaded after losing focus
+  chrome.storage.sync.set({page_on_load: page}, function(){
+      console.log("page on load is " + page);
+  });
 };
 
 // Get the number of recipes stored in local storage

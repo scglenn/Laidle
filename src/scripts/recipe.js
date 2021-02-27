@@ -25,13 +25,31 @@ var recipeName = document.getElementById('recipeName');
 add_btn.onclick = function(element) 
 {
     saveChanges();
-    window.location.href="../views/recipe_list.html"
+    window.location.href="../views/recipe_list.html";
+
+    // Find the current html page in order to know which data needs to be saved.
+    //var path = window.location.pathname;
+    var page = "recipe_list.html";//path.split("/").pop();
+    
+    //Store the page that is going to be loaded after losing focus
+    chrome.storage.sync.set({page_on_load: page}, function(){
+        console.log("page on load is " + page);
+    });
 };
 
 //  When the back button the user is redirected to the recipe list page
 back_btn.onclick = function(element) 
 {
-    window.location.href="../views/recipe_list.html"
+    window.location.href="../views/recipe_list.html";
+
+    // Find the current html page in order to know which data needs to be saved.
+    //var path = window.location.pathname;
+    var page = "recipe_list.html";//path.split("/").pop();
+    
+    //Store the page that is going to be loaded after losing focus
+    chrome.storage.sync.set({page_on_load: page}, function(){
+        console.log("page on load is " + page);
+    });
 };
 
 
@@ -61,14 +79,70 @@ var rec_description = urlParams.get('recipe_description');
 // Recipe ID
 var rec_id = urlParams.get('recipe_id');
 
-// Update the recipe name field at the top of the page with the recipe name passed
-// from the previous page
-recipeName.value = rec_name;
 
-// Update the recipe description text area with the recipe description from local storage
-text_area.innerHTML = rec_description;
+document.addEventListener('DOMContentLoaded', function () {
 
-// This fucntion saves the recipe data from this page into local storage.
+    //https://stackoverflow.com/questions/60361379/how-to-get-chrome-storage-to-save-on-chrome-extension-popup-close
+    const STORAGE_SELECTOR = '.storage[id]';
+    let debounceTimer;
+    
+    document.addEventListener('change', saveOnChange);
+    document.addEventListener('input', saveOnChange);
+    
+    
+    function saveOnChange(e) {
+      if (e.target.closest(STORAGE_SELECTOR)) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(doSave, 100);
+      }
+    };
+
+    function doSave() {
+        var rec_title = recipeName.value;
+
+        // - recipe description
+        text_area = document.getElementById('recipeDescription');
+        var rec_desc = text_area.value;
+
+        var page = "../views/recipe.html?recipe_name="+rec_title+"&recipe_description="+rec_desc+"&recipe_id="+rec_id+"";//"recipe.html";//path.split("/").pop();
+    
+        //DEBUG: new method i am trying
+        chrome.storage.sync.set({page_on_load: page}, function(){
+            //console.log("page on load is " + page);
+        });
+    };
+
+    // Update the recipe name field at the top of the page with the recipe name passed
+    // from the previous page
+    chrome.storage.sync.get('recipe_title', function(data) {
+        
+        if(data.recipe_title != "" && rec_name == undefined)
+        {
+            recipeName.value = data.recipe_title;
+        }
+        else
+        {
+            recipeName.value = rec_name;
+        }
+
+    });
+
+    // Update the recipe description text area with the recipe description from local storage
+    chrome.storage.sync.get('recipe_description', function(data) {
+
+        if(data.recipe_description != "" && rec_description == undefined)
+        {
+            text_area.innerHTML = data.recipe_description;
+        }
+        else
+        {
+            text_area.innerHTML = rec_description;
+        }
+
+    });
+});
+
+// This function saves the recipe data from this page into local storage.
 function saveChanges() 
 {   
     // Grab the latest text area value
@@ -88,9 +162,6 @@ function saveChanges()
         message('Error: No value specified');
         return;
     }
-
-    // TODO: Leaving this here for now
-    console.log("whats going on with rec id" + rec_id);
 
     // if the recipe id doesnt exist then 
     if(rec_id == "undefined")
@@ -134,4 +205,4 @@ chrome.runtime.onMessage.addListener(
     var test= document.getElementById('recipe');
     test.textContent = request.food_list;
     }
-  );
+);
