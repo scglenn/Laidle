@@ -9,6 +9,8 @@
 
 */
 
+import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
+
 // Grab the html page that was loaded last
 // This functionality helps retain the users last actions
 chrome.storage.sync.get('page_on_load', function(data) {
@@ -19,7 +21,7 @@ chrome.storage.sync.get('page_on_load', function(data) {
   // What needs to be saved?
   // - html page file to load on click
   // - Ingredient strings
-  if(page == "ingredients.html")
+  if(page.includes("ingredients.html"))
   {
     window.location.href="../views/ingredients.html";
   }
@@ -28,7 +30,7 @@ chrome.storage.sync.get('page_on_load', function(data) {
   // What needs to be saved?
   // - html page file to load on click
   // - probably nothing special, just reload everything
-  if(page == "recipe_list.html")
+  if(page.includes("recipe_list.html"))
   {
     window.location.href="../views/recipe_list.html";
   }
@@ -72,29 +74,16 @@ chrome.runtime.onMessage.addListener(
 
 // Transition extension page to ingredients view
 show_ingredients_btn.onclick = function(element) {
-  window.location.href="../views/ingredients.html";
 
-  // Find the current html page in order to know which data needs to be saved.
-  var page = "ingredients.html";
-  
-  //Store the page that is going to be loaded after losing focus
-  chrome.storage.sync.set({page_on_load: page}, function(){
-      console.log("page on load is " + page);
-  });
-  
+  fadeOutDownAnimation("../views/ingredients.html");
 };
 
 // Transition extension page to the recipe list view
 show_recipes_btn.onclick = function(element) {
 
-  window.location.href="../views/recipe_list.html";
-
-  // Find the current html page in order to know which data needs to be saved.
-  var page = "recipe_list.html";
-  
-  //Store the page that is going to be loaded after losing focus
-  chrome.storage.sync.set({page_on_load: page}, function(){
-      console.log("page on load is " + page);
-  });
-  
+  fadeOutDownAnimation("../views/recipe_list.html")
 };
+
+// Start animations on page load
+initializeAnimation();
+

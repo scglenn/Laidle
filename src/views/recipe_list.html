@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="noScroll">
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -7,6 +7,10 @@
         <!-- Boostrap 4 CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="../stylesheets/recipe_list.css" >
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+    
         <style>
         
 
@@ -14,6 +18,7 @@
         {
             width: 30rem;
             height: 36rem;
+            font-family: 'Rock Salt', cursive;
         }
 
         #pageTitle
@@ -39,23 +44,11 @@
         
         </style>
     </head>
-    <body>
-        <!-- <button id="changeColor"></button> -->
+    <body class="noScroll">
         <div id=mainMenu>
             <div id="pageTitle">Recipes Page</div>
             
-            <div id="recipeList">
-                <!-- <div id="generate-here">
-                    Here is generated content
-                </div> -->
-                <!-- <p>Recipe 1</p>
-                <button id="edit" type="button" class="btn btn-outline-primary">
-                    Edit
-                </button>
-                <button id="remove"type="button" class="btn btn-outline-secondary">
-                    Remove
-                </button> -->
-            </div>
+            <div id="recipeList"></div>
 
             <button id="add" type="button" class="btn btn-primary btn-lg btn-block">
                 Add Recipe
@@ -64,13 +57,12 @@
                 Back
             </button>
         </div>
-        
         <!-- Boostrap JS -->
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <!-- Custom Scripts-->
-        <script src="../scripts/recipe_list.js"></script>
+        <script type="module" src="../scripts/recipe_list.js"></script>
 
     </body>
 </html>

@@ -9,34 +9,17 @@
 
 */
 
+import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
+
+
 // Grab the number of recipes in local storage
 chrome.storage.sync.get('number_of_recipes', function(data) {
     
-    // The number of recipes in local storage
-    var number_of_recipes = data.number_of_recipes;
+  // The number of recipes in local storage
+  var number_of_recipes = data.number_of_recipes;
     
-    /*
-         _                 
-        | |                
-        | |__  _   _  __ _ 
-        | '_ \| | | |/ _` |
-        | |_) | |_| | (_| |
-        |_.__/ \__,_|\__, |
-                      __/ |
-                     |___/ 
-    */
-    //There is a bug here where if we delete recipe 0 then everything breaks
-    //Proposed solution: need to store a list of recipe ids instead of using number of recipes
-    var recipe_list = [];
-
-    // Add each recipe id to the recipe list array
-    for(var i = 0;i< number_of_recipes; i++)
-    {
-        
-        var recipe_id_string = 'recipe_id_' + (i+1);
-        recipe_list.push(recipe_id_string);
-    }
-
+  chrome.storage.sync.get('recipe_id_list',function(list){
+    
     //Create html
     function create(htmlStr) 
     {
@@ -57,9 +40,10 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
         return frag;
     }
 
+    console.log(list.recipe_id_list);
     // Get each recipe listed in the recipe list array from local storage
     // Note: Variables cannot be used as keys without using computed keys, new in ES6.
-    chrome.storage.sync.get(recipe_list , function(data) 
+    chrome.storage.sync.get(list.recipe_id_list , function(data) 
     {
 
         // Iterate through each recipe
@@ -67,9 +51,6 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
 
             // Used as a temporary variable to index the dictionary
             var temp_recipe_id_string = key;
-
-            // This log will display each key value pair in the recipe_list variable
-            console.log(key, data[key]);
 
             // Create p tag that has the recipes name + edit/remove buttons
             var fragment = create("<p class='recipeRow'>" + data[temp_recipe_id_string].recipe_name + "<br><button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button><button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button></p>"); 
@@ -93,7 +74,6 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
                 window.location.href="../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp /*data[temp_recipe_id_string].recipe_description*/+"&recipe_id="+temp_recipe_id_string+"";
             
                 // Find the current html page in order to know which data needs to be saved.
-                // var path = window.location.pathname;
                 var page = "../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp /*data[temp_recipe_id_string].recipe_description*/+"&recipe_id="+temp_recipe_id_string+"";//window.location.href;//"recipe.html";//path.split("/").pop();
                 
                 //Store the page that is going to be loaded after losing focus
@@ -107,20 +87,14 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
             {
                 // Remove recipe and recipe data from local storage
                 chrome.storage.sync.remove([key], function(result) {
-                    
-                    // Get the number of recipes in local storage
-                    // NOTE: This should probably be chaned because this is the second time its called
-                    chrome.storage.sync.get('number_of_recipes', function(data) {
 
-                        // Reduce number of recipes by 1
-                        var num_of_recipes = data.number_of_recipes-1;
-                
-                        // Set the new number of recipes in local storage
-                        chrome.storage.sync.set({'number_of_recipes' : num_of_recipes}, 
-                        function() {
-                            
-
-                        });
+                    //Get the recipe id list and store the new recipe id to that list
+                    chrome.storage.sync.get('recipe_id_list',function(list){
+                      
+                      list.recipe_id_list = list.recipe_id_list.filter(e => e !== key);
+                      chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function() {
+                          
+                      });
                     });
 
                     // Transition user to recipe list page
@@ -129,6 +103,7 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
             };
         });
     });
+  });
 });
 
 // Access the add button
@@ -140,30 +115,13 @@ var back_btn = document.getElementById('back');
 //  This should send the user to a blank recipe.html
 add_btn.onclick = function(element) 
 {
-    window.location.href="../views/recipe.html?recipe_name="+"test"+"&recipe_description="+"test"+"&recipe_id="+undefined+"";
-
-    // Find the current html page in order to know which data needs to be saved.
-    var page = "../views/recipe.html?recipe_name="+"test"+"&recipe_description="+"test"+"&recipe_id="+undefined+"";
-    
-    //Store the page that is going to be loaded after losing focus
-    chrome.storage.sync.set({page_on_load: page}, function(){
-        console.log("page on load is " + page);
-    });
-  };
+    fadeOutDownAnimation("../views/recipe.html?recipe_name="+""+"&recipe_description="+""+"&recipe_id="+undefined+"");
+};
 
 // This should send the user to the default popup page
 back_btn.onclick = function(element) 
 {
-    window.location.href="../views/popup.html";
-
-    // Find the current html page in order to know which data needs to be saved.
-    var page = "popup.html";
-    
-    //Store the page that is going to be loaded after losing focus
-    chrome.storage.sync.set({page_on_load: page}, function(){
-        console.log("page on load is " + page);
-    });
-
+    fadeOutDownAnimation("../views/popup.html");
 };
 
 // Listener for message from extension or content script
@@ -178,3 +136,6 @@ chrome.runtime.onMessage.addListener(
     test.textContent = request.food_list;
     }
 );
+
+
+initializeAnimation();

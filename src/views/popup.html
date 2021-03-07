@@ -10,35 +10,38 @@
     
     <link rel="stylesheet" href="../stylesheets/popup.css" >
 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+
     <style>
 
       body
       {
         width: 30rem;
         height: 36rem;
+        font-family: 'Rock Salt', cursive;
       }
 
       button {
         height: auto;
       }
-
-
-
       
     </style>
+
   </head>
-  <body>
-    <!-- <button id="changeColor"></button> -->
-    <!-- <div id="recipe">sfdsfdsfd</div> -->
+  <body>  
     <div id="mainMenu">
-      <img id="logo" src = "../../resources/First_attempt.png"
-      alt = "Laidle Logo" height = "250" width = "270"/>
+      <div>
+        <h1>L<div>ai</div>dle</h1>
+        <img id="logo" src = "../../resources/First_attempt.png"
+        alt = "Laidle Logo" height = "250" width = "270"/>
+      </div>
       <div id="menuButtons">
-        <button type="button" id="showIngredients" class="btn btn-primary btn-lg btn-block">Show Grocery List</button>
-        <button type="button" id="showRecipes" class="btn btn-secondary btn-lg btn-block">Show Recipes</button>    
+        <button type="button" id="showIngredients" class="btn btn-primary btn-lg btn-block">Generate Grocery List</button>
+        <button type="button" id="showRecipes" class="btn btn-secondary btn-lg btn-block">View Recipes</button>    
       </div>
     </div>
-    <script src="../scripts/popup.js"></script>
+    <script type="module" src="../scripts/popup.js"></script>
     <!-- Boostrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>

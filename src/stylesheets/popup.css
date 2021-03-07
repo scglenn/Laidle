@@ -1,62 +1,122 @@
 body
 {
-
     background-color: #171b26;
-
-    /* background-color: transparent; */
-    /* light color #343e56 */
-    /* mediu color #293143 */
-    /* dark color #576170; */
     border-radius: 2em;
 }
+
+html, body {margin: 0; height: 100%; overflow: hidden}
 
 #mainMenu
 {
     background-color: #343e56;
     padding: 2em;
-    margin: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 0.5em;
     height: 35em;
     border-radius: 2em;
+    opacity: 0;
+    position: relative;
+    top: 130px;
 }
 
 #showIngredients
 {
-    background-color: #47c2be;
-    color: #343e56;
-    border-color: #47c2be;
-
+  background-color: #47c2be;
+  color: #343e56;
+  border-color: #47c2be;
 }
 
 #showIngredients:hover 
 {
-    /* color: #576170; */
-    background-color: #343e56;
-    border-color: #47c2be;
-    color: #47c2be;
-
+  background-color: #343e56;
+  border-color: #47c2be;
+  color: #47c2be;
 }
 
 #showRecipes
 {
-    background-color: #576170;
-    color: white;
-    border-color: #576170;
+  background-color: #576170;
+  color: white;
+  border-color: #576170;
 }
 
 #showRecipes:hover 
 {
-    color: white;
-    background-color: #293143;
-    border-color: #293143;
+  color: white;
+  background-color: #293143;
+  border-color: #293143;
 }
 
 #logo
 {
-    /* height: 23em; */
-    height: auto;
-    width: 100%;
-    border-radius: 2em;
-    background-color: white;
-    margin-bottom: 1em;
-    background-image: url("/resources/notepad.jpg");
+  height: auto;
+  width: 100%;
+  border-radius: 2em;
+  background-color: white;
+  margin-bottom: 1em;
+  background-image: url("/resources/notepad.jpg");   
 }
+
+.fadeIn {
+  animation: fadeIn .5s ease-in 1 forwards;
+}
+.fadeOut {
+  animation: fadeOut .5s ease-out 1 forwards;
+}
+.slideDown {
+  animation: slideDown .5s ease-in 1 forwards;               
+}
+.slideUp {
+  animation: slideUp 1s ease-out 1 forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    top: 0px;
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    top: 130px;
+  }
+}
+@keyframes slideDown {
+  to {
+    bottom: 0px;
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+      top: 130px;
+      opacity: 0;
+  }
+  to {
+    top: 0px;
+    opacity: 1;
+  }
+}
+
+h1
+{
+  z-index: 100;
+  position: absolute;
+  left: 5.5em;
+  top: 4em;
+}
+
+h1 div
+{
+  display: contents;
+  color: #46c1bd;
+}
+
+  

@@ -7,6 +7,9 @@
 
 */
 
+//Import the page animations that get used between page transitions
+import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
+
 // Adding recipe button
 var add_btn = document.getElementById('add');
 
@@ -25,31 +28,14 @@ var recipeName = document.getElementById('recipeName');
 add_btn.onclick = function(element) 
 {
     saveChanges();
-    window.location.href="../views/recipe_list.html";
-
-    // Find the current html page in order to know which data needs to be saved.
-    //var path = window.location.pathname;
-    var page = "recipe_list.html";//path.split("/").pop();
     
-    //Store the page that is going to be loaded after losing focus
-    chrome.storage.sync.set({page_on_load: page}, function(){
-        console.log("page on load is " + page);
-    });
+    fadeOutDownAnimation("../views/recipe_list.html");
 };
 
 //  When the back button the user is redirected to the recipe list page
 back_btn.onclick = function(element) 
 {
-    window.location.href="../views/recipe_list.html";
-
-    // Find the current html page in order to know which data needs to be saved.
-    //var path = window.location.pathname;
-    var page = "recipe_list.html";//path.split("/").pop();
-    
-    //Store the page that is going to be loaded after losing focus
-    chrome.storage.sync.set({page_on_load: page}, function(){
-        console.log("page on load is " + page);
-    });
+    fadeOutDownAnimation("../views/recipe_list.html");
 };
 
 
@@ -140,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     });
+
+    fadeInUpAnimation();
 });
 
 // This function saves the recipe data from this page into local storage.
@@ -181,6 +169,14 @@ function saveChanges()
             chrome.storage.sync.set({[recipe_id_string] : {recipe_name,recipe_description}}, function() {
                 // Notify that we saved.
                 //message('Settings saved');
+            });
+
+            //Get the recipe id list and store the new recipe id to that list
+            chrome.storage.sync.get('recipe_id_list',function(list){
+                list.recipe_id_list.push(recipe_id_string);
+                chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function() {
+                    
+                });
             });
         });
     }

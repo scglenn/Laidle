@@ -1,65 +1,112 @@
 body
 {
-    /* background-color: #47c2be; */
-    background-color: #171b26;
-    /* light color #343e56 */
-    /* mediu color #293143 */
-    /* dark color #576170; */
+  background-color: #171b26;
 }
+
+html, body {margin: 0; height: 100%; overflow: hidden}
 
 label
 {
-    color: #47c2be;
+  color: #47c2be;
 }
 
 #mainMenu
 {
-    background-color: #343e56;
-    padding: 2em;
-    margin: 1em;
-    height: 35em;
-    border-radius: 2em;
+  background-color: #343e56;
+  padding: 2em;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-top: 0.5em;
+  height: 35em;
+  border-radius: 2em;
+  opacity: 0;
+  position: relative;
+  top: 130px;
 }
 
 #add
 {
-    background-color: #47c2be;
-    color: #343e56;
-    border-color: #47c2be;
-
+  background-color: #47c2be;
+  color: #343e56;
+  border-color: #47c2be;
 }
 
 #add:hover 
 {
-    /* color: #576170; */
-    background-color: #343e56;
-    border-color: #47c2be;
-    color: #47c2be;
-
+  background-color: #343e56;
+  border-color: #47c2be;
+  color: #47c2be;
 }
 
 #back
 {
-    background-color: #576170;
-    color: white;
-    border-color: #576170;
+  background-color: #576170;
+  color: white;
+  border-color: #576170;
 }
 
 #back:hover 
 {
-    color: white;
-    background-color: #293143;
-    border-color: #293143;
+  color: white;
+  background-color: #293143;
+  border-color: #293143;
 }
 
 #recipeDescription
 {
-    background-color: #fff4b4;
-    /* Added this attribute to allow formatting to be retained  */
-    white-space: pre-wrap;
+  background-color: #fff4b4;
+  /* Added this attribute to allow formatting to be retained  */
+  white-space: pre-wrap;
 }
 
 #recipeName
 {
-    background-color: #fff4b4;
+  background-color: #fff4b4;
+}
+
+.fadeIn {
+  animation: fadeIn .5s ease-in 1 forwards;
+}
+.fadeOut {
+  animation: fadeOut .5s ease-out 1 forwards;
+}
+.slideDown {
+  animation: slideDown .5s ease-in 1 forwards;               
+}
+.slideUp {
+  animation: slideUp 1s ease-out 1 forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    top: 0px;
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    top: 130px;
+  }
+}
+@keyframes slideDown {
+  to {
+    bottom: 0px;
+    opacity: 1;
+  }
+}
+@keyframes slideUp {
+  from {
+      top: 130px;
+      opacity: 0;
+  }
+  to {
+    top: 0px;
+    opacity: 1;
+  }
 }

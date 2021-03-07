@@ -10,14 +10,20 @@
 
 */
 
+import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
+
 //This dictionary holds all the information received from wit.ai
 var dict = {};
+
+var promises = [];
 
 // This is the second parsing phase of the wit.ai request.
 // Once wit has sent its parse of the ingredient we can make educated decisions on how to categorize data.
 // This function will create add or update something in the dictionary
-function GenerateRow(res)
+async function GenerateRow(res)
 {
+  console.log(res);
+  console.log(Object.keys(res.entities));
   
   //If the result from wit is blank or undefined then just terminate the function call
   if(res == null || res == undefined)
@@ -146,25 +152,6 @@ function GenerateRow(res)
     
 };
 
-// This function makes a single request to wit.ai
-function WitRequest(ingredient_string) 
-{
-  // This is the ingredient string
-  // Example: "3 cups of honey"
-  const q = encodeURIComponent(ingredient_string);
-  
-  // Keys needed to run this. Keeping this data in private for now.
-  // HTTP request for wit.ai to parse the ingredient string
-  const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
-  const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
-  fetch(uri, {headers: {Authorization: auth}})
-      .then(res => res.json()
-      )
-      .then(res => 
-        GenerateRow(res)
-      )
-};
-
 // Text area displays the ingredients 
 var text_area = document.getElementById('ingredientsDescription');
 // Back button to go back
@@ -173,61 +160,42 @@ var back_btn = document.getElementById('back');
 // Go back to the default page
 back_btn.onclick = function(element) 
 {
-    window.location.href="../views/popup.html"
-
-  // Find the current html page in order to know which data needs to be saved.
-  //var path = window.location.pathname;
-  var page = "popup.html";//path.split("/").pop();
-  
-  //Store the page that is going to be loaded after losing focus
-  chrome.storage.sync.set({page_on_load: page}, function(){
-      console.log("page on load is " + page);
-  });
+  fadeOutDownAnimation("../views/popup.html");
 };
 
-// Get the number of recipes stored in local storage
-chrome.storage.sync.get('number_of_recipes', function(data) {
 
-  // The number of recipes in storage
-  var number_of_recipes = data.number_of_recipes;
-  // The list of all recipes
-  var recipe_list = [];
+async function functionOne() {
+  return new Promise((resolve, reject) => {
+    // Get the number of recipes stored in local storage
+    chrome.storage.sync.get('number_of_recipes', function(data) {
 
-  // Iterate through the list of recipes
-  for(var i = 0;i< number_of_recipes; i++)
-  {
-    // Dynamically generate the recipe id string
-    var recipe_id_string = 'recipe_id_' + (i+1);
+      console.log("one");
+      // The number of recipes in storage
+      var number_of_recipes = data.number_of_recipes;
 
-    // Adding each recipe id to the recipe list
-    recipe_list.push(recipe_id_string);
-  }
-
-  // Set text area to be blank
-  text_area.value = "";
-
-  //Variables cannot be used as keys without using computed keys, new in ES6.
-  //
-  // Get the recipe list out of local storage
-  chrome.storage.sync.get(recipe_list , function(data) 
-  {
-
-    // Iterate through each recipe
-    Object.keys(data).forEach(key => {
-
-      // Parse each ingredient by the return character
-      var each_ingredient = data[key].recipe_description.split('\n');
-
-      // Make a wit.ai request for each ingredient
-      each_ingredient.forEach( row => {
-        WitRequest(row);
+      chrome.storage.sync.get('recipe_id_list',function(list){
+        resolve(list.recipe_id_list);
       });
-      
+    
     });
+  })
+};
 
+async function functionTwo(recipe_list)
+{
+  return new Promise((resolve, reject) => {
+    // Get the recipe list out of local storage
+    chrome.storage.sync.get(recipe_list , function(data) 
+    {
+      console.log("three");
+      console.log(data);
+      resolve(data); 
+    });
   });
+}
 
-});
+
+
 
 // Listener for content script message or backgorund script message
 chrome.runtime.onMessage.addListener(
@@ -241,20 +209,13 @@ chrome.runtime.onMessage.addListener(
 
 );
 
-//  _                     _       _     _ 
-// | |                   | |     (_)   | |
-// | |__   __ _ _ __   __| | __ _ _  __| |
-// | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
-// | |_) | (_| | | | | (_| | (_| | | (_| |
-// |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
-// 
-// Description: This timeout is here as a band aid to a problem where I need a couple seconds
-// to receive http request responses from wit.ai. I just need to use promises instead.                            
-setTimeout(() => {
 
-  // Iterate through the dictionary of recipe information
+async function fillList()
+{
+  // Iterate through the dictionary of recipe information    
   Object.keys(dict).forEach(function(key) {
-
+    console.log("key");
+    console.log(Object.keys(dict[key]));
     // Insert product name into the grocery list text area
     text_area.value += key + "\n"
 
@@ -262,6 +223,7 @@ setTimeout(() => {
     Object.keys(dict[key]).forEach(function(second_key){
       // Insert number of measurements for the product
       text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
+      console.log(text_area.value);
     });
 
     // Move on to the next ingredient
@@ -275,5 +237,99 @@ setTimeout(() => {
   // Make loading div hidden
   document.getElementById('loading-wrapper').style.visibility = "hidden";
 
+  //
+  fadeInUpAnimation();
 
-}, 6000);
+  console.log(promises);
+
+};
+
+functionOne().then(data=>{
+
+  console.log(data);
+
+  // The list of all recipes
+  var recipe_list = data;
+
+  functionTwo(recipe_list).then(data=>{
+
+    //  _                     _       _     _ 
+    // | |                   | |     (_)   | |
+    // | |__   __ _ _ __   __| | __ _ _  __| |
+    // | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
+    // | |_) | (_| | | | | (_| | (_| | | (_| |
+    // |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
+    // 
+    // Description: 
+    // This functionality writes to the text area multiple times.
+    // Currently it is not efficient. A new promise structure
+    // needs to be configured in order to write to text area
+    // only once.
+    // Iterate through each recipe
+    Object.keys(data).forEach(key => {
+
+      // Parse each ingredient by the return character
+      var each_ingredient = data[key].recipe_description.split('\n');
+
+      functionThree(each_ingredient).then(data=>{
+        
+      });
+      
+    });
+  });
+});
+
+async function functionThree(each_ingredient)
+{
+  return new Promise((resolve, reject) => {
+
+        var fetchPromises =[];
+        const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
+        // Make a wit.ai request for each ingredient
+        each_ingredient.forEach( row => {
+
+          // This is the ingredient string
+          // Example: "3 cups of honey"
+          const q = encodeURIComponent(row);
+          
+          // Keys needed to run this. Keeping this data in private for now.
+          // HTTP request for wit.ai to parse the ingredient string
+          const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
+           
+          var myfunc =fetch(uri, {headers: {Authorization: auth}})
+          
+          fetchPromises.push(myfunc);
+        });
+        
+        Promise.all(fetchPromises).then(function (responses) {
+          // Get a JSON object from each of the responses
+          return Promise.all(responses.map(function (response) {
+            console.log("response");
+            console.log(response);
+            return response.json();
+          }));
+        }).then(function (data) {
+
+          data.forEach( row=> {
+            GenerateRow(row);
+          });
+
+        })
+        .then(function(data){
+          text_area.value = "";
+          fillList().then(idk=>{
+            console.log("then fill list");
+            console.log(dict);
+          });
+
+        })
+        .catch(function (error) {
+          // if there's an error, log it
+          console.log(error);
+        });
+
+        resolve(dict);
+  });
+}
+
+//https://www.whateatly.com/list-of-vegetables/
