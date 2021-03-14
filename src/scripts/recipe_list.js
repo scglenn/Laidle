@@ -125,17 +125,17 @@ back_btn.onclick = function(element)
 };
 
 // Listener for message from extension or content script
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      console.log(sender.tab ?
-                  "from a content script:" + sender.tab.url :
-                  "from the extension");
-    //   if (request.greeting == "hello")
-    //     sendResponse({farewell: "goodbye"});
-    var test= document.getElementById('recipe');
-    test.textContent = request.food_list;
-    }
-);
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//       console.log(sender.tab ?
+//                   "from a content script:" + sender.tab.url :
+//                   "from the extension");
+//     //   if (request.greeting == "hello")
+//     //     sendResponse({farewell: "goodbye"});
+//     var test= document.getElementById('recipe');
+//     test.textContent = request.food_list;
+//     }
+// );
 
 
 initializeAnimation();

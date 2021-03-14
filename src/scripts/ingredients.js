@@ -12,6 +12,8 @@
 
 import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
+//import numericQuantity from './../../node_modules/numeric-quantity';//'/numeric-quantity';
+
 //This dictionary holds all the information received from wit.ai
 var dict = {};
 
@@ -37,11 +39,13 @@ async function GenerateRow(res)
   // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
   // Example: 1 tomato is just a whole tomato.
   // Note: Originally undefined
-  var measurement = "whole";
+  var measurement = "whole";//"whole";
+
+  var measurement_found = false;
   
   // The amount of the measurement
   // Note: Originally undefined
-  var amount = 1;
+  var amount = "";
   
   // TODO: this isnt being used yet
   var note = "";
@@ -66,6 +70,7 @@ async function GenerateRow(res)
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) {
     
+    console.log(res.text);
     var entity_name = res.entities[key][0].name;
     var entity_value = res.entities[key][0].value;
 
@@ -84,6 +89,13 @@ async function GenerateRow(res)
       //  Problem could exist here where quantity and measurement are in the same query.
       //  The quantity entity has both unit and value fields.
       //  Treating quantity and measurement/amount synonymous is currently a bug on the wit.ai side.
+      quantity_measurement = res.entities[key][0].unit;
+      quantity_amount = entity_value;
+      quantity_found = true;
+    }
+    else if(entity_name == "wit$distance")
+    {
+      // THIS IS A BANDAID TO TEST WHETHER DISTANCE WORKS 
       quantity_measurement = res.entities[key][0].unit;
       quantity_amount = entity_value;
       quantity_found = true;
@@ -111,10 +123,29 @@ async function GenerateRow(res)
   // 
   // Logic is needed to see if quantity and amount were found in query
   // PROBLEM: There should be a strategy to find best solution. The current solution is a bandaid.
-  if(quantity_found && amount_found && (quantity_amount != amount))
+  if(quantity_found && amount_found /*&& (quantity_amount != amount)*/)
   {
-    measurement = quantity_measurement;
-    amount = quantity_amount * amount;
+    // After doing a couple different cases this bandaid causes tons of weird edge case problems
+    // A new strategy is needed for handling these cases
+    //measurement = quantity_measurement;
+    //amount = quantity_amount * amount;
+
+    // Testing a new strategy
+    var regexp = new RegExp(amount,"gi");
+    var amount_count = res.text.match(regexp).length;
+    console.log(amount_count);
+    //var quantity_amount_count = res.text.match('/'+quantity_amount+'/g');
+    if(amount_count > 1 || (amount != quantity_amount))
+    {
+      measurement = "(" + quantity_amount + " " + quantity_measurement + " Per " + measurement + ")";
+    }
+    else
+    {
+      measurement = quantity_measurement;
+      amount = quantity_amount
+    }
+    
+    // amount stays unchanged?
   }
   else if(quantity_found)
   {
@@ -130,10 +161,29 @@ async function GenerateRow(res)
     // Nothing currently
   }
 
-  // Add product to dictionary with the measurement and amount if its not in the dictionary
-  if(!(product in dict))
+
+
+  if((measurement == "whole" && amount == ""))
   {
-    dict[product] = {[measurement] : amount};
+    if(!("To Taste & Etc" in dict))
+    {
+      // Purpose: To catch sitations like salt, pepper, tomato, 
+      dict["To Taste & Etc"] = {[product]: "" };
+    }
+    else
+    {
+      (dict["To Taste & Etc"])[product] = "";
+    }
+    // console.log("Product: " + product);
+    // console.log("Measurement: " + measurement);
+    // console.log("Amount: " + amount);
+
+  }
+  // Add product to dictionary with the measurement and amount if its not in the dictionary
+  else if(!(product in dict))
+  {
+    
+    dict[product] = {[measurement] : numericQuantity(amount)};
   }
   else
   {
@@ -141,12 +191,25 @@ async function GenerateRow(res)
     if(measurement in dict[product])
     {
       // PROBLEM: dangerous to just add amount without checking it
-      (dict[product])[measurement] += amount
+      // A BUG LIVES HERE!
+      // If a value like 2.5 exists at this location and you add 2, it is output as 22.5 instead of 4.5
+      //     \ /
+      //     oVo
+      // \___XXX___/
+      //  __XXXXX__
+      // /__XXXXX__\
+      // /   XXX   \
+      //      V
+      //https://www.npmjs.com/package/numeric-quantity
+      //https://www.npmjs.com/package/parse-ingredient
+      (dict[product])[measurement] = numericQuantity((dict[product])[measurement]) + numericQuantity(amount);
+      console.log("Adding measurements together");
+      console.log((dict[product])[measurement] );
     }
     else
     {
       // Add new measurement to existing product
-      (dict[product])[measurement] = amount;
+      (dict[product])[measurement] = numericQuantity(amount);//amount
     }
   }
     
@@ -288,17 +351,23 @@ async function functionThree(each_ingredient)
         // Make a wit.ai request for each ingredient
         each_ingredient.forEach( row => {
 
-          // This is the ingredient string
-          // Example: "3 cups of honey"
-          const q = encodeURIComponent(row);
-          
-          // Keys needed to run this. Keeping this data in private for now.
-          // HTTP request for wit.ai to parse the ingredient string
-          const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
-           
-          var myfunc =fetch(uri, {headers: {Authorization: auth}})
-          
-          fetchPromises.push(myfunc);
+          // THERE IS A BUG I NEED TO HANDLE FOR BLANK ENTRIES THAT BREAKS MY SCRIPT
+          if (row != "" && row != undefined)
+          {
+            // console.log("Whats going on");
+            // console.log(row);
+            // This is the ingredient string
+            // Example: "3 cups of honey"
+            const q = encodeURIComponent(row);
+            
+            // Keys needed to run this. Keeping this data in private for now.
+            // HTTP request for wit.ai to parse the ingredient string
+            const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
+            
+            var myfunc =fetch(uri, {headers: {Authorization: auth}})
+            
+            fetchPromises.push(myfunc);
+          }
         });
         
         Promise.all(fetchPromises).then(function (responses) {
@@ -311,7 +380,10 @@ async function functionThree(each_ingredient)
         }).then(function (data) {
 
           data.forEach( row=> {
+            
+
             GenerateRow(row);
+            
           });
 
         })

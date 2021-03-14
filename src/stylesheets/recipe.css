@@ -22,6 +22,7 @@ label
   opacity: 0;
   position: relative;
   top: 130px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 #add
@@ -29,6 +30,7 @@ label
   background-color: #47c2be;
   color: #343e56;
   border-color: #47c2be;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 #add:hover 
@@ -43,6 +45,7 @@ label
   background-color: #576170;
   color: white;
   border-color: #576170;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 #back:hover 
@@ -57,11 +60,13 @@ label
   background-color: #fff4b4;
   /* Added this attribute to allow formatting to be retained  */
   white-space: pre-wrap;
+  font-family: 'Oswald', sans-serif;
 }
 
 #recipeName
 {
   background-color: #fff4b4;
+  font-family: 'Oswald', sans-serif;
 }
 
 .fadeIn {

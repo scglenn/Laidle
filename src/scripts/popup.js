@@ -52,25 +52,25 @@ var show_ingredients_btn = document.getElementById('showIngredients');
 var show_recipes_btn = document.getElementById('showRecipes');
 
 // This function sends the doSkip message to the content.js page
-function popup() {
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-      var activeTab = tabs[0];
-      chrome.tabs.sendMessage(activeTab.id, { doSkip: true })
-   });
-}
+// function popup() {
+//     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+//       var activeTab = tabs[0];
+//       chrome.tabs.sendMessage(activeTab.id, { doSkip: true })
+//    });
+// }
 
 // Listener for receiving a message from the extension or content scripts
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      console.log(sender.tab ?
-                  "from a content script:" + sender.tab.url :
-                  "from the extension");
-    //   if (request.greeting == "hello")
-    //     sendResponse({farewell: "goodbye"});
-    var test= document.getElementById('recipe');
-    test.textContent = request.food_list;
-    }
-  );
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//       console.log(sender.tab ?
+//                   "from a content script:" + sender.tab.url :
+//                   "from the extension");
+//     //   if (request.greeting == "hello")
+//     //     sendResponse({farewell: "goodbye"});
+//     var test= document.getElementById('recipe');
+//     test.textContent = request.food_list;
+//     }
+//   );
 
 // Transition extension page to ingredients view
 show_ingredients_btn.onclick = function(element) {

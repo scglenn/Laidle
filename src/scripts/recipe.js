@@ -23,12 +23,16 @@ var text_area = document.getElementById('recipeDescription');
 // The name of the recipe
 var recipeName = document.getElementById('recipeName');
 
+// $('.alert').alert();
+
 // When add button is clicked all changes are saved
 // The user is redirected to the recipe list page
 add_btn.onclick = function(element) 
 {
     saveChanges();
     
+    //document.getElementsByClassName('alert')[0].alert();
+    // $('.alert').show('fade');
     fadeOutDownAnimation("../views/recipe_list.html");
 };
 
@@ -151,6 +155,18 @@ function saveChanges()
         return;
     }
 
+    // Replace "And"s with \n 
+    // Somewhat of a bandaid
+    // Need to re-learn regex again
+    if(recipe_description.includes(",") == false)
+    {
+        const regex = /And/gi;
+        recipe_description = recipe_description.replace(regex,"\n");
+    }
+    
+    const hyphen_regex = /-/gi;
+    recipe_description = recipe_description.replace(hyphen_regex,' ');
+
     // if the recipe id doesnt exist then 
     if(rec_id == "undefined")
     {
@@ -191,14 +207,14 @@ function saveChanges()
 }
 
 // Listener for receiving messages from the extension or content script
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      console.log(sender.tab ?
-                  "from a content script:" + sender.tab.url :
-                  "from the extension");
-    //   if (request.greeting == "hello")
-    //     sendResponse({farewell: "goodbye"});
-    var test= document.getElementById('recipe');
-    test.textContent = request.food_list;
-    }
-);
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//       console.log(sender.tab ?
+//                   "from a content script:" + sender.tab.url :
+//                   "from the extension");
+//     //   if (request.greeting == "hello")
+//     //     sendResponse({farewell: "goodbye"});
+//     var test= document.getElementById('recipe');
+//     test.textContent = request.food_list;
+//     }
+// );

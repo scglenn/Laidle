@@ -75,36 +75,35 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 // Check tab if skippable
-const doCheck = tabid => {
-  setTimeout(() => {  chrome.tabs.sendMessage(tabid, { skipCheck: true }, res => {
-    if (res && res.skip) setBadge(true)
-    else setBadge(false)
-    return true
-  }); }, 500)
-  
-}
+// const doCheck = tabid => {
+//   setTimeout(() => {  chrome.tabs.sendMessage(tabid, { skipCheck: true }, res => {
+//     if (res && res.skip) setBadge(true)
+//     else setBadge(false)
+//     return true
+//   }); }, 500)
+// }
 
 // Set badge
-const setBadge = bool => {
-  const text = { text: bool ? 'Skip!' : '' }
-  chrome.browserAction.setBadgeText(text)
-}
+// const setBadge = bool => {
+//   const text = { text: bool ? 'Skip!' : '' }
+//   chrome.browserAction.setBadgeText(text)
+// }
 
 // Set badge background color
-chrome.browserAction.setBadgeBackgroundColor({ color: '#808000' })
+//chrome.browserAction.setBadgeBackgroundColor({ color: '#808000' })
 
 // On page navigation
-chrome.tabs.onUpdated.addListener((tabid, changeInfo, tab) => {
-  if (changeInfo.status == 'complete' && tab.active) doCheck(tabid)
-})
+// chrome.tabs.onUpdated.addListener((tabid, changeInfo, tab) => {
+//   if (changeInfo.status == 'complete' && tab.active) doCheck(tabid)
+// })
 
 // On tab switch
-chrome.tabs.onActivated.addListener(activeInfo => {
-  doCheck(activeInfo.tabId)
-})
+// chrome.tabs.onActivated.addListener(activeInfo => {
+//   doCheck(activeInfo.tabId)
+// })
 
-function mySaveFunction(data){
-  console.log("my save function");
-};
+// function mySaveFunction(data){
+//   console.log("my save function");
+// };
 
 console.log("background script");

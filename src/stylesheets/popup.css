@@ -1,6 +1,6 @@
 body
 {
-    background-color: #171b26;
+    background-color: #47c2be;
     border-radius: 2em;
 }
 
@@ -18,6 +18,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
     opacity: 0;
     position: relative;
     top: 130px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 #showIngredients
@@ -25,6 +26,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   background-color: #47c2be;
   color: #343e56;
   border-color: #47c2be;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 #showIngredients:hover 
@@ -39,6 +41,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   background-color: #576170;
   color: white;
   border-color: #576170;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 #showRecipes:hover 
@@ -56,6 +59,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
   background-color: white;
   margin-bottom: 1em;
   background-image: url("/resources/notepad.jpg");   
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.3);
 }
 
 .fadeIn {
