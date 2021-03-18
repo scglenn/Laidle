@@ -18,8 +18,7 @@
 
   "content_scripts": [
     {
-      "js": ["src/scripts/content.js"],
-      "matches": ["*://*/*"]
+      "js": ["src/scripts/content.js"]
     }
   ],
 
@@ -30,13 +29,9 @@
    "128": "resources/icon128.png"
   },
 
-  "homepage_url": "https://github.com/mn6/narwhal",
+  "homepage_url": "https://www.samuel-glenn.com",
   "permissions": [
-    "*://*/*",
-    "activeTab",
-    "storage",
-    "declarativeContent",
-    "clipboardWrite"
+    "storage"
   ],
   "options_page": "src/views/options.html",
   "content_security_policy": "script-src 'self' https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com; object-src 'self'"
