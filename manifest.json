@@ -17,9 +17,6 @@
   },
 
   "content_scripts": [
-    {
-      "js": ["src/scripts/content.js"]
-    }
   ],
 
   "description": "Laidle is a Chrome extension that generates a comprehensive grocery list from recipes collected in browser!",
