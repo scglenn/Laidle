@@ -11,13 +11,13 @@ Artificial intelligence is used to parse the ingredients of each recipe into a c
 
 Eating home cooked meals every day can require a lot of planning if you are trying to get everything in a single trip to the store. 
 
-[Insert Gif here]
+<p align="center">
+  <img src="/resources/meme.gif" alt="Meme">
+</p>
 
 I usually find 5 recipes online and proceed write up a grocery list that doesnt have duplicate items. By the time im finished, I have a messy list with multiple things crossed off and not to mention all the time it took to scan through each recipe. So I decided to create this chrome extension do to all that for me. I figured it would save me time and the headache of it all. 
 
 After a couple hours I realized that I hated the idea of writing logic for parsing ingredient text. So I figured I could train Wit.ai to do it for me! Thus Laidle was born!
-
-[Laidle] 
 
 **[Chrome Store Link](https://chrome.google.com/webstore/detail/narwhal/anpnihlhmokhgcdoobohmdbfmibbfgpb)**
 
