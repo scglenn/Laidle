@@ -158,11 +158,12 @@ function saveChanges()
     // Replace "And"s with \n 
     // Somewhat of a bandaid
     // Need to re-learn regex again
-    if(recipe_description.includes(",") == false)
-    {
-        const regex = /And/gi;
-        recipe_description = recipe_description.replace(regex,"\n");
-    }
+    // Checking for "," is not really a good way to categorize cases where i need to do this
+    // if(recipe_description.includes(",") == false)
+    // {
+    //     const regex = /And/gi;
+    //     recipe_description = recipe_description.replace(regex,"\n");
+    // }
     
     const hyphen_regex = /-/gi;
     recipe_description = recipe_description.replace(hyphen_regex,' ');

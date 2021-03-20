@@ -168,12 +168,13 @@ async function GenerateRow(res)
     if(!("To Taste & Etc" in dict))
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
-      dict["To Taste & Etc"] = {[product]: "" };
+      dict["To Taste & Etc"] = {[res.text]: "" };
     }
     else
     {
-      (dict["To Taste & Etc"])[product] = "";
+      (dict["To Taste & Etc"])[res.text] = "";
     }
+    console.log(dict["To Taste & Etc"]);
     // console.log("Product: " + product);
     // console.log("Measurement: " + measurement);
     // console.log("Amount: " + amount);
