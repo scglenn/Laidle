@@ -25,10 +25,10 @@ After a couple hours I realized that I hated the idea of writing logic for parsi
 
 ### Chrome
 1. Click the "Clone or Download" dropdown above and then "Download ZIP".
-2. Move the `laidle-master` folder from the ZIP to wherever you'd like.
+2. Move the `Laidle-main` folder from the ZIP to wherever you'd like.
 3. Type `chrome://extensions/` in your address bar.
 4. Check "Developer Mode" at the top right of the page.
-5. Click "Load Unpacked" on the top left and open the `laidle-master` folder.
+5. Click "Load Unpacked" on the top left and open the `Laidle-main` folder.
 
 ## Have a suggestion for a recipe website I've missed?
 
