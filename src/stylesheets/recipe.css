@@ -3,6 +3,10 @@ body
   background-color: #171b26;
 }
 
+body.shake {
+  animation: shake 1s infinite;
+}
+
 html, body {margin: 0; height: 100%; overflow: hidden}
 
 label
@@ -113,5 +117,50 @@ label
   to {
     top: 0px;
     opacity: 1;
+  }
+}
+
+.fade-scale {
+  transform: scale(0);
+  opacity: 0;
+  -webkit-transition: all .25s linear;
+  -o-transition: all .25s linear;
+  transition: all .25s linear;
+}
+
+.fade-scale.in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fade {
+  position: absolute;
+  /* transition-duration: 0.25s; */
+  transition-duration: 0.125s;
+  top: 2em;
+  z-index: 10;
+  left: 10%;
+  right: 10%;
+  width: auto;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(0.5em);
+  }
+  40% {
+    transform: translate(-0.5em);
+  }
+  60% {
+    transform: translate(0.5em);
+  }
+  80% {
+    transform: translate(-0.5em);
+  }
+  100% {
+    transform: translate(0);
   }
 }

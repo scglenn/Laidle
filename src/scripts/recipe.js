@@ -23,17 +23,52 @@ var text_area = document.getElementById('recipeDescription');
 // The name of the recipe
 var recipeName = document.getElementById('recipeName');
 
-// $('.alert').alert();
+var alert_on = false;
+
+function alert(title, text, type) {
+    
+    if(alert_on == false)
+    {
+        var html = $("<div class='alert alert-dismissible " + type + "'><strong>" + title + "</strong> " + text + "<a href='#' class='close float-close' data-dismiss='alert' aria-label='close'>×</a></div>");
+
+        html.on('close.bs.alert', function () {
+            alert_on = false;
+        });
+        
+        $('body').prepend(html);
+        
+        setTimeout(function() 
+        {
+            html.addClass('show fade');
+            $('body').addClass('shake');
+            setTimeout(function(){
+                $('body').removeClass('shake');
+            }, 1000);
+        },0);
+
+        alert_on = true;
+    }
+    
+  };
 
 // When add button is clicked all changes are saved
 // The user is redirected to the recipe list page
 add_btn.onclick = function(element) 
 {
     saveChanges();
+    const prohibited_regex = /plus|\+/gi;
     
-    //document.getElementsByClassName('alert')[0].alert();
-    // $('.alert').show('fade');
-    fadeOutDownAnimation("../views/recipe_list.html");
+    var prohibited_strings = text_area.value.match(prohibited_regex);
+
+    if(prohibited_strings != null)
+    {
+        alert('Error!', "plus and + sign are prohibited until further updates!", 'alert-danger');
+        
+    }
+    else
+    {
+        fadeOutDownAnimation("../views/recipe_list.html");
+    }
 };
 
 //  When the back button the user is redirected to the recipe list page
@@ -164,6 +199,25 @@ function saveChanges()
     //     const regex = /And/gi;
     //     recipe_description = recipe_description.replace(regex,"\n");
     // }
+
+    // Need to have some functionality that handles approximation cases like (1-2 tbs of .... , 2-3 lbs of ....)
+    // Regex for floating point numbers and decimals: [+]?[0-9]*\.?[0-9]+
+    // Regex for finding hyphen cases: [+]?[0-9]*\.?[0-9]+-[+]?[0-9]*\.?[0-9]+
+    // This functionality could potentially later by categorized by Wit.AI using the wit/amount_of_money entity
+    const value_range_regex = /[+]?[0-9]*\.?[0-9]+-[+]?[0-9]*\.?[0-9]+/gi;
+    const min_max_regex = /[+]?[0-9]*\.?[0-9]+/gi;
+    var ranges = recipe_description.match(value_range_regex);
+    
+    if(ranges != null)
+    {
+        ranges.forEach(element => {
+            var min_max_values = element.match(min_max_regex);
+            var min = min_max_values[0];
+            var max = min_max_values[1];
+            recipe_description = recipe_description.replace(element,max);
+        });
+    }
+   
     
     const hyphen_regex = /-/gi;
     recipe_description = recipe_description.replace(hyphen_regex,' ');
