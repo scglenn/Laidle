@@ -31,7 +31,7 @@ function fadeInUpAnimation()
     var obj = document.getElementById('mainMenu');
     
     obj.setAttribute("class", "slideUp");
-    setTimeout(enableScroll,5000);
+    setTimeout(enableScroll,1000);
     
 }
 

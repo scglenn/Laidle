@@ -29,7 +29,7 @@ function alert(title, text, type) {
     
     if(alert_on == false)
     {
-        var html = $("<div class='alert alert-dismissible " + type + "'><strong>" + title + "</strong> " + text + "<a href='#' class='close float-close' data-dismiss='alert' aria-label='close'>×</a></div>");
+        var html = $("<div class='alert alert-dismissible " + type + "'><strong>" + title + "</strong><br> " + text + "<a href='#' class='close float-close' data-dismiss='alert' aria-label='close'>×</a></div>");
 
         html.on('close.bs.alert', function () {
             alert_on = false;
@@ -55,18 +55,29 @@ function alert(title, text, type) {
 // The user is redirected to the recipe list page
 add_btn.onclick = function(element) 
 {
-    saveChanges();
     const prohibited_regex = /plus|\+/gi;
     
-    var prohibited_strings = text_area.value.match(prohibited_regex);
+    // Grab the latest text area value
+    var recipe_description = text_area.value;
 
-    if(prohibited_strings != null)
+    var prohibited_strings = recipe_description.match(prohibited_regex);
+
+    // Grab the latest recipe name value
+    var recipe_name = recipeName.value;
+
+    // Recipe description is required
+    // Recipe name is required
+    if (!recipe_description || !recipe_name) {
+        alert('Error!', "Empty Fields",'alert-danger');
+    }
+    else if(prohibited_strings != null)
     {
-        alert('Error!', "plus and + sign are prohibited until further updates!", 'alert-danger');
+        alert('Error!', "Prohibited text: 'plus' and '+'", 'alert-danger');
         
     }
     else
     {
+        saveChanges();
         fadeOutDownAnimation("../views/recipe_list.html");
     }
 };
@@ -177,18 +188,6 @@ function saveChanges()
 
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
-
-    // Recipe description is required
-    if (!recipe_description) {
-        message('Error: No value specified');
-        return;
-    }
-
-    // Recipe name is required
-    if (!recipe_name) {
-        message('Error: No value specified');
-        return;
-    }
 
     // Replace "And"s with \n 
     // Somewhat of a bandaid

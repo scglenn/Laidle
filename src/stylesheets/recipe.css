@@ -164,3 +164,9 @@ label
     transform: translate(0);
   }
 }
+
+.alert
+{
+  position: absolute;
+  text-align: center;
+}
