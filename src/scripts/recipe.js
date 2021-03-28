@@ -23,6 +23,8 @@ var text_area = document.getElementById('recipeDescription');
 // The name of the recipe
 var recipeName = document.getElementById('recipeName');
 
+// Keeps track of whether an alert is currently displayed
+// Used to prevent the user from triggering the same alert multiple times in a row
 var alert_on = false;
 
 function alert(title, text, type)
