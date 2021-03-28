@@ -119,7 +119,7 @@ async function GenerateRow(res)
     const fraction_regex = new RegExp(/[0-9]*\.?[0-9] *[1-9][0-9]*\/[1-9][0-9]*/gi);
     var fraction_edge_case = res.text.match(fraction_regex);
 
-    if(fraction_edge_case.length > 0)
+    if(fraction_edge_case != null && fraction_edge_case.length > 0)
     {
       // Add the 'quantity amount' and the 'amount' together
       // if the faction edge case was found
