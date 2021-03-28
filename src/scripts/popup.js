@@ -9,6 +9,7 @@
 
 */
 
+//Import the page animations that get used between page transitions
 import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
 // Grab the html page that was loaded last

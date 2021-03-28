@@ -9,8 +9,8 @@
 
 */
 
+//Import the page animations that get used between page transitions
 import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
-
 
 // Grab the number of recipes in local storage
 chrome.storage.sync.get('number_of_recipes', function(data)
@@ -90,6 +90,7 @@ chrome.storage.sync.get('number_of_recipes', function(data)
                     //Get the recipe id list and store the new recipe id to that list
                     chrome.storage.sync.get('recipe_id_list',function(list)
                     {
+                      // Regenerate recipe id list without the recipe id that is going to be removed
                       list.recipe_id_list = list.recipe_id_list.filter(e => e !== key);
                       chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function(){});
                     });
@@ -118,8 +119,9 @@ add_btn.onclick = function(element)
 // This should send the user to the default popup page
 back_btn.onclick = function(element) 
 {
+    // Fade out and transition to the next page
     fadeOutDownAnimation("../views/popup.html");
 };
 
-
+// Configure page to load and play animation
 initializeAnimation();

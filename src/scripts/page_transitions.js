@@ -1,3 +1,13 @@
+/*
+
+    File: page_transitions.js
+    Purpose: 
+
+      [] - 
+
+      [] - 
+
+*/
 
 
 
@@ -5,22 +15,6 @@
 
 
 
-//   ..---..
-//  /       \
-// |         |
-// :         ;
-//  \  \~/  /
-//   `, Y ,'
-//    |_|_|
-//    |===|
-//    |===|
-//     \_/
-//
-// INVESTIGATE: what different ways can i include a javascript function from another file?
-// Looks like there are some APIs available, will those work for a chrome extension?
-// Otherwise i can make globals. Is that fine for page transitions tho?
-// https://stackoverflow.com/questions/31030013/sharing-js-functions-between-files-without-making-them-global-or-attaching-them/31030202
-// https://www.sitepoint.com/understanding-es6-modules/
 function initializeAnimation()
 {
     document.addEventListener("DOMContentLoaded", () => setTimeout(fadeInUpAnimation, 100));
