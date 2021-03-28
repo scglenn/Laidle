@@ -134,8 +134,19 @@ async function GenerateRow(res)
     var regexp = new RegExp(amount,"gi");
     var amount_count = res.text.match(regexp).length;
     console.log(amount_count);
-    //var quantity_amount_count = res.text.match('/'+quantity_amount+'/g');
-    if(amount_count > 1 || (amount != quantity_amount))
+    //var quantity_amount_count = res.text.match('/'+quantity_amount+'/g')
+    
+    const fraction_regex = new RegExp(/[0-9]*\.?[0-9] *[1-9][0-9]*\/[1-9][0-9]*/gi);
+    var fraction_edge_case = res.text.match(fraction_regex);
+
+    // console.log("REGEX");
+    // console.log(fraction_edge_case);
+    if(fraction_edge_case.length > 0)
+    {
+      measurement = quantity_measurement;
+      amount = quantity_amount + amount;
+    }
+    else if(amount_count > 1 || (amount != quantity_amount))
     {
       measurement = "(" + quantity_amount + " " + quantity_measurement + " Per " + measurement + ")";
     }

@@ -55,7 +55,7 @@ function alert(title, text, type) {
 // The user is redirected to the recipe list page
 add_btn.onclick = function(element) 
 {
-    const prohibited_regex = /plus|\+/gi;
+    const prohibited_regex = /\+|-/gi;
     
     // Grab the latest text area value
     var recipe_description = text_area.value;
@@ -72,7 +72,7 @@ add_btn.onclick = function(element)
     }
     else if(prohibited_strings != null)
     {
-        alert('Error!', "Prohibited text: 'plus' and '+'", 'alert-danger');
+        alert('Error!', "Prohibited text: '+' '-' ", 'alert-danger');
         
     }
     else
@@ -203,23 +203,23 @@ function saveChanges()
     // Regex for floating point numbers and decimals: [+]?[0-9]*\.?[0-9]+
     // Regex for finding hyphen cases: [+]?[0-9]*\.?[0-9]+-[+]?[0-9]*\.?[0-9]+
     // This functionality could potentially later by categorized by Wit.AI using the wit/amount_of_money entity
-    const value_range_regex = /[+]?[0-9]*\.?[0-9]+-[+]?[0-9]*\.?[0-9]+/gi;
-    const min_max_regex = /[+]?[0-9]*\.?[0-9]+/gi;
-    var ranges = recipe_description.match(value_range_regex);
-    
-    if(ranges != null)
-    {
-        ranges.forEach(element => {
-            var min_max_values = element.match(min_max_regex);
-            var min = min_max_values[0];
-            var max = min_max_values[1];
-            recipe_description = recipe_description.replace(element,max);
-        });
-    }
-   
-    
-    const hyphen_regex = /-/gi;
-    recipe_description = recipe_description.replace(hyphen_regex,' ');
+    // const value_range_regex = /[+]?[0-9]*\.?[0-9]+-[+]?[0-9]*\.?[0-9]+/gi;
+    // const min_max_regex = /[+]?[0-9]*\.?[0-9]+/gi;
+    // var ranges = recipe_description.match(value_range_regex);
+    // console.log("Range testing");
+    // console.log(ranges);
+    // if(ranges != null)
+    // {
+    //     ranges.forEach(element => {
+    //         var min_max_values = element.match(min_max_regex);
+    //         var min = min_max_values[0];
+    //         var max = min_max_values[1];
+    //         recipe_description = recipe_description.replace(element,max);
+    //     });
+    // }
+    // const hyphen_regex = /-/gi;
+    // recipe_description = recipe_description.replace(hyphen_regex,' ');
+
 
     // if the recipe id doesnt exist then 
     if(rec_id == "undefined")
