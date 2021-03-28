@@ -7,7 +7,7 @@
 
 */
 
-//Import the page animations that get used between page transitions
+// Import the page animations that get used between page transitions
 import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
 // Adding recipe button

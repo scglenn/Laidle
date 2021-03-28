@@ -10,12 +10,11 @@
 
 */
 
+// Import the page animations that get used between page transitions
 import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
 //This dictionary holds all the information received from wit.ai
 var dict = {};
-
-var promises = [];
 
 // This is the second parsing phase of the wit.ai request.
 // Once wit has sent its parse of the ingredient we can make educated decisions on how to categorize data.
@@ -34,16 +33,11 @@ async function GenerateRow(res)
   // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
   // Example: 1 tomato is just a whole tomato.
   // Note: Originally undefined
-  var measurement = "whole";//"whole";
-
-  var measurement_found = false;
+  var measurement = "whole";
   
   // The amount of the measurement
   // Note: Originally undefined
   var amount = "";
-  
-  // TODO: this isnt being used yet
-  var note = "";
   
   // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
   // Example: 1 tomato is just a whole tomato.
@@ -65,7 +59,10 @@ async function GenerateRow(res)
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
+    // Access current entity name
     var entity_name = res.entities[key][0].name;
+
+    // Access current entity value
     var entity_value = res.entities[key][0].value;
 
     // Check which entity name was received
@@ -96,7 +93,7 @@ async function GenerateRow(res)
     }
     else if(entity_name == "note")
     {
-      note = entity_value;
+      var note = entity_value;
     }
     else 
     {
@@ -107,40 +104,46 @@ async function GenerateRow(res)
     }
   });
 
-  //  _                     _       _     _ 
-  // | |                   | |     (_)   | |
-  // | |__   __ _ _ __   __| | __ _ _  __| |
-  // | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
-  // | |_) | (_| | | | | (_| | (_| | | (_| |
-  // |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
-  // 
+  // This large code block is mainly used for special edge cases
   // Logic is needed to see if quantity and amount were found in query
   if(quantity_found && amount_found)
   {
-    // Testing a new strategy
-    var regexp = new RegExp(amount,"gi");
-    var amount_count = res.text.match(regexp).length;
+    // Regular expression to search for the occurances of amount
+    var reg_exp = new RegExp(amount,"gi");
+    var amount_count = res.text.match(reg_exp).length;
     
+    // Regular expression to search for fractions
+    // Note: This allows us to find a special edge case where a recipe states
+    // Something like: 2 1/2 cups of ....
+    // It may be something that can be handled different in the future
     const fraction_regex = new RegExp(/[0-9]*\.?[0-9] *[1-9][0-9]*\/[1-9][0-9]*/gi);
     var fraction_edge_case = res.text.match(fraction_regex);
 
     if(fraction_edge_case.length > 0)
     {
+      // Add the 'quantity amount' and the 'amount' together
+      // if the faction edge case was found
       measurement = quantity_measurement;
       amount = quantity_amount + amount;
     }
     else if(amount_count > 1 || (amount != quantity_amount))
     {
+      // Edge case where a recipe states something like:
+      // 2 (8 oz) cans of stuff
       measurement = "(" + quantity_amount + " " + quantity_measurement + " Per " + measurement + ")";
     }
     else
     {
+      // This is the case where 'amount' and 'quantity' were both found by WIT
+      // but WIT categorized the same words twice
+      // This seems like a bug/bandaid so it may change in the future
       measurement = quantity_measurement;
       amount = quantity_amount
     }
   }
   else if(quantity_found)
   {
+    // This is a standard case, such as "2 lbs of tomatoes"
     measurement = quantity_measurement;
     amount = quantity_amount;
   }
@@ -154,9 +157,12 @@ async function GenerateRow(res)
   }
 
 
-
   if((measurement == "whole" && amount == ""))
   {
+    // This is a special edge case where a specific amount and measurement were not provided
+    // Its mainly for recipes that mention ingredients "To Taste"
+    // If "To Taste & Etc" has never been added to the dictionary
+    // Note: This is somewhat of a bandaid but it works great for now
     if(!("To Taste & Etc" in dict))
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
@@ -164,13 +170,13 @@ async function GenerateRow(res)
     }
     else
     {
+      // Add a new text entry to the existing "To Taste & Etc" key
       (dict["To Taste & Etc"])[res.text] = "";
     }
   }
-  // Add product to dictionary with the measurement and amount if its not in the dictionary
   else if(!(product in dict))
   {
-    
+    // Add product to dictionary with the measurement and amount if its not in the dictionary
     dict[product] = {[measurement] : numericQuantity(amount)};
   }
   else
@@ -185,7 +191,7 @@ async function GenerateRow(res)
     else
     {
       // Add new measurement to existing product
-      (dict[product])[measurement] = numericQuantity(amount);//amount
+      (dict[product])[measurement] = numericQuantity(amount);
     }
   }
 };
@@ -198,26 +204,26 @@ var back_btn = document.getElementById('back');
 // Go back to the default page
 back_btn.onclick = function(element) 
 {
+  // Fade out and transition page
   fadeOutDownAnimation("../views/popup.html");
 };
 
-
-async function functionOne() 
+// Retrieves the recipe id list as an async function
+async function awaitForRecipeIDList() 
 {
   return new Promise((resolve, reject) => 
   {
     // Get the number of recipes stored in local storage
+    // NOTE: This first call probably doesnt need to be called
     chrome.storage.sync.get('number_of_recipes', function(data) 
     {
-      // The number of recipes in storage
-      var number_of_recipes = data.number_of_recipes;
-
       chrome.storage.sync.get('recipe_id_list',function(list){resolve(list.recipe_id_list);});
     });
   })
 };
 
-async function functionTwo(recipe_list)
+// Retrieves the recipe list as an async function
+async function awaitForRecipeList(recipe_list)
 {
   return new Promise((resolve, reject) => 
   {
@@ -227,14 +233,9 @@ async function functionTwo(recipe_list)
 }
 
 // Listener for content script message or backgorund script message
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) 
-  {
-      
-  }
-);
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {});
 
-
+// Writes the ingredient list to the text area
 async function fillList()
 {
   // Iterate through the dictionary of recipe information    
@@ -260,16 +261,18 @@ async function fillList()
   // Make loading div hidden
   document.getElementById('loading-wrapper').style.visibility = "hidden";
 
-  //
+  // Once text area has data written to it, allow the page to fade in and hide the loading gif
   fadeInUpAnimation();
 };
 
-functionOne().then(data=>
+// Start process for making fetch requests to WIT API and parsing data into the ingredient text area
+awaitForRecipeIDList().then(data=>
 {
   // The list of all recipes
   var recipe_list = data;
 
-  functionTwo(recipe_list).then(data=>
+  // Pull recipe list and start the process of making WIT API requests
+  awaitForRecipeList(recipe_list).then(data=>
   {
     //  _                     _       _     _ 
     // | |                   | |     (_)   | |
@@ -289,60 +292,76 @@ functionOne().then(data=>
       // Parse each ingredient by the return character
       var each_ingredient = data[key].recipe_description.split('\n');
 
-      functionThree(each_ingredient).then(data=>{  });
+      // Execute fetch requests to WIT API for each ingredient in each recipe
+      awaitForWITReponse(each_ingredient).then(data=>{});
     });
   });
 });
 
-async function functionThree(each_ingredient)
+// Executes multiple fetch requests to the WIT API
+// This is via an async function to wait for all requests to be complete
+// before displaying the generated grocery list
+async function awaitForWITReponse(each_ingredient)
 {
   return new Promise((resolve, reject) => 
   {
-        var fetchPromises =[];
-        const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
-        // Make a wit.ai request for each ingredient
-        each_ingredient.forEach( row => 
-        {
-          // THERE IS A BUG I NEED TO HANDLE FOR BLANK ENTRIES THAT BREAKS MY SCRIPT
-          if (row != "" && row != undefined)
-          {
-            // This is the ingredient string
-            // Example: "3 cups of honey"
-            const q = encodeURIComponent(row);
-            
-            // Keys needed to run this. Keeping this data in private for now.
-            // HTTP request for wit.ai to parse the ingredient string
-            const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
-            
-            var myfunc = fetch(uri, {headers: {Authorization: auth}})
-            
-            fetchPromises.push(myfunc);
-          }
-        });
-        
-        Promise.all(fetchPromises).then(function (responses) 
-        {
-          // Get a JSON object from each of the responses
-          return Promise.all(responses.map(function (response) {return response.json();}));
-        }).then(function (data) 
-        {
-          data.forEach(row=> 
-          {
-            GenerateRow(row);
-          });
-        })
-        .then(function(data)
-        {
-          text_area.value = "";
-          fillList().then(idk=>{});
-        })
-        .catch(function (error) 
-        {
-          // if there's an error, log it
-          console.log(error);
-        });
+    // Used to collect all promises into one list
+    var fetchPromises =[];
 
-        resolve(dict);
+    // The API code used to make requests to Food Bro
+    // Food Bro is the name of the WIT API bot
+    const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
+
+    // Make a wit.ai request for each ingredient
+    each_ingredient.forEach( row => 
+    {
+      // THERE IS A BUG I NEED TO HANDLE FOR BLANK ENTRIES THAT BREAKS MY SCRIPT
+      if (row != "" && row != undefined)
+      {
+        // This is the ingredient string
+        // Example: "3 cups of honey"
+        const q = encodeURIComponent(row);
+        
+        // Keys needed to run this. Keeping this data in private for now.
+        // HTTP request for wit.ai to parse the ingredient string
+        const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
+        
+        // Create fetch function with a unique uri
+        var fetch_func = fetch(uri, {headers: {Authorization: auth}})
+        
+        // Push fetch function into the list of promises
+        fetchPromises.push(fetch_func);
+      }
+    });
+    
+    // Await for all promises to be resolved
+    Promise.all(fetchPromises).then(function (responses) 
+    {
+      // Get a JSON object from each of the responses
+      return Promise.all(responses.map(function (response) {return response.json();}));
+    }).then(function (data) 
+    {
+      data.forEach(row=> 
+      {
+        // Parse WIT response for each ingredient
+        GenerateRow(row);
+      });
+    })
+    .then(function(data)
+    {
+      // Clear text area before filling the text area
+      // This is a big bandaid currently, due to the list being filled multiple times
+      text_area.value = "";
+      fillList().then(idk=>{});
+    })
+    .catch(function (error) 
+    {
+      // if there's an error, log it
+      console.log(error);
+    });
+
+    // Resolve the promise and return dict
+    resolve(dict);
   });
 }
 

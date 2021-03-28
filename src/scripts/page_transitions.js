@@ -3,73 +3,87 @@
     File: page_transitions.js
     Purpose: 
 
-      [] - 
+      [] - Contains functionality for animating page transitions
 
-      [] - 
+      [] - Contains functionality for enabling/disabling scrolling
 
+      [] - Contains functionality for transitioning to another page
 */
 
-
-
-
-
-
-
+// Applies fadeInUpAnimation when the DOM content is loaded
 function initializeAnimation()
 {
     document.addEventListener("DOMContentLoaded", () => setTimeout(fadeInUpAnimation, 100));
 }
 
+// Applies slideUp to the mainMenu and enables scrolling after 1 second
 function fadeInUpAnimation()
 {
-    var obj = document.getElementById('mainMenu');
-    
-    obj.setAttribute("class", "slideUp");
-    setTimeout(enableScroll,1000);
+  // Access the main menu window
+  let main_menu = document.getElementById('mainMenu');
+
+  // Animate main menu to slide/fade up
+  main_menu.setAttribute("class", "slideUp");
+
+  // After 1 second, enable scrolling
+  // Note: This is applied after the animation is completed otherwise
+  // the scroll bar would show up as the page is sliding up.
+  setTimeout(enableScroll,1000);
 }
 
+// Removes slideUp and applies fadeOut
+// Page is transitioned to the transition_page_name
 function fadeOutDownAnimation(transition_page_name)
 {
+  // Scrolling is disables so the scroll bar doesnt appear
+  // Mostly a design preference, i just thought it looked bad
   disableScroll();
 
-  var obj = document.getElementById('mainMenu');
+  // Access the main menu window
+  let main_menu = document.getElementById('mainMenu');
   
-  obj.removeAttribute("class", "slideUp");
-  obj.setAttribute("class","fadeOut");
+  // Remove slideUp so that the element is
+  // configured when fadeOut is applied
+  main_menu.removeAttribute("class", "slideUp");
 
+  // Apply fadeOut
+  main_menu.setAttribute("class","fadeOut");
+
+  // After 250 milliseconds, transition to the transition_page_name
   setTimeout(function() {transitionPageTo(transition_page_name)},250);
 }    
 
+// Transitions the current page to the transition_page_name URL
 function transitionPageTo(transition_page_name)
-{  
-  window.location.href=transition_page_name;
+{
+  // Set the URL to the provide page name
+  window.location.href = transition_page_name;
   
   //Store the page that is going to be loaded after losing focus
-  chrome.storage.sync.set({page_on_load: transition_page_name}, function()
-  {
-      console.log("page on load is " + transition_page_name);
-  });
-
+  chrome.storage.sync.set({page_on_load: transition_page_name}, function(){});
 }
 
+// Enables scrolling 
 function enableScroll()
 {
-  var obj = document.getElementsByTagName('body')[0];
-  var obj2 = document.getElementsByTagName('html')[0];
-  obj.removeAttribute("class","noScroll");
-  obj2.removeAttribute("class","noScroll");
-  obj.setAttribute("class","allowScroll");
-  obj2.setAttribute("class","allowScroll");
+  let body = document.getElementsByTagName('body')[0];
+  let html = document.getElementsByTagName('html')[0];
+  body.removeAttribute("class","noScroll");
+  html.removeAttribute("class","noScroll");
+  body.setAttribute("class","allowScroll");
+  html.setAttribute("class","allowScroll");
 }
 
+// Disables scrolling
 function disableScroll()
 {
-    var obj = document.getElementsByTagName('body')[0];
-    var obj2 = document.getElementsByTagName('html')[0];
-    obj.removeAttribute("class","allowScroll");
-    obj2.removeAttribute("class","allowScroll");
-    obj.setAttribute("class","noScroll");
-    obj2.setAttribute("class","noScroll");    
+  let body = document.getElementsByTagName('body')[0];
+  let html = document.getElementsByTagName('html')[0];
+  body.removeAttribute("class","allowScroll");
+  html.removeAttribute("class","allowScroll");
+  body.setAttribute("class","noScroll");
+  html.setAttribute("class","noScroll");    
 }
 
+// Exporting these functions to be used in other .js files
 export {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation};
