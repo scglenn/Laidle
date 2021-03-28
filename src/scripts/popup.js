@@ -13,8 +13,8 @@ import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
 // Grab the html page that was loaded last
 // This functionality helps retain the users last actions
-chrome.storage.sync.get('page_on_load', function(data) {
-  
+chrome.storage.sync.get('page_on_load', function(data) 
+{
   var page = data.page_on_load;
 
   // ingredients.html
@@ -44,7 +44,6 @@ chrome.storage.sync.get('page_on_load', function(data) {
   {
     window.location.href=page;
   }
-
 });
 
 // Both buttons that give the user the ability to generate grocery list and the recipes page
@@ -52,14 +51,14 @@ var show_ingredients_btn = document.getElementById('showIngredients');
 var show_recipes_btn = document.getElementById('showRecipes');
 
 // Transition extension page to ingredients view
-show_ingredients_btn.onclick = function(element) {
-
+show_ingredients_btn.onclick = function(element)
+{
   fadeOutDownAnimation("../views/ingredients.html");
 };
 
 // Transition extension page to the recipe list view
-show_recipes_btn.onclick = function(element) {
-
+show_recipes_btn.onclick = function(element)
+{
   fadeOutDownAnimation("../views/recipe_list.html")
 };
 

@@ -11,17 +11,10 @@
 */
 
 // Initialize the extension on install
-chrome.runtime.onInstalled.addListener(function() {
-
-  //Store the color variable in local storage
-  chrome.storage.sync.set({color: '#3aa757'}, function() {
-    console.log("The color is green.");
-  });
-
+chrome.runtime.onInstalled.addListener(function() 
+{
   //Store the number_of_recipes variable in local storage
-  chrome.storage.sync.set({number_of_recipes: 1}, function(){
-    console.log("number of recipes = 1");
-  });
+  chrome.storage.sync.set({number_of_recipes: 1}, function(){console.log("number of recipes = 1");});
 
   //Store the first recipe in local storage in order to seed the user data
   chrome.storage.sync.set({'recipe_id_1': {recipe_name: "Tacos",recipe_description: 
@@ -37,41 +30,17 @@ chrome.runtime.onInstalled.addListener(function() {
 3/4 cup diced red onion
 1/2 cup chopped fresh cilantro leaves
 1 lime, cut into wedges`
-}}, function(){
-    console.log("created recipe 1");
-  });
+}}, function(){console.log("created recipe 1");});
 
   var list = ['recipe_id_1'];
 
   //Store the list of recipe ids
-  chrome.storage.sync.set({'recipe_id_list': list}, function(){
-    console.log("created recipe 1");
-  });
+  chrome.storage.sync.set({'recipe_id_list': list}, function(){console.log("created recipe 1");});
 
   //Store the page that is going to be loaded after losing focus
-  chrome.storage.sync.set({page_on_load: 'popup.html'}, function(){
-    console.log("page on load is popup.html");
-  });
-
+  chrome.storage.sync.set({page_on_load: 'popup.html'}, function(){console.log("page on load is popup.html");});
   
-  chrome.storage.sync.set({recipe_title: undefined}, function(){
-        
-  });
+  chrome.storage.sync.set({recipe_title: undefined}, function(){});
 
-  chrome.storage.sync.set({recipe_description: undefined}, function(){
-      
-  });
-
-  //TODO: What does this function call do? What is its purpose?
-  // chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
-  //   chrome.declarativeContent.onPageChanged.addRules([{
-  //     conditions: [new chrome.declarativeContent.PageStateMatcher({
-  //       pageUrl: {hostEquals: 'developer.chrome.com'},
-  //     })
-  //     ],
-  //         actions: [new chrome.declarativeContent.ShowPageAction()]
-  //   }]);
-  // });
+  chrome.storage.sync.set({recipe_description: undefined}, function(){});
 });
-
-console.log("background script");

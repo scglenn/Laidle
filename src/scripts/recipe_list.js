@@ -13,13 +13,13 @@ import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
 
 // Grab the number of recipes in local storage
-chrome.storage.sync.get('number_of_recipes', function(data) {
-    
+chrome.storage.sync.get('number_of_recipes', function(data)
+{
   // The number of recipes in local storage
   var number_of_recipes = data.number_of_recipes;
     
-  chrome.storage.sync.get('recipe_id_list',function(list){
-    
+  chrome.storage.sync.get('recipe_id_list',function(list)
+  {
     //Create html
     function create(htmlStr) 
     {
@@ -40,15 +40,13 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
         return frag;
     }
 
-    console.log(list.recipe_id_list);
     // Get each recipe listed in the recipe list array from local storage
     // Note: Variables cannot be used as keys without using computed keys, new in ES6.
     chrome.storage.sync.get(list.recipe_id_list , function(data) 
     {
-
         // Iterate through each recipe
-        Object.keys(data).forEach(key => {
-
+        Object.keys(data).forEach(key =>
+        {
             // Used as a temporary variable to index the dictionary
             var temp_recipe_id_string = key;
 
@@ -77,7 +75,8 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
                 var page = "../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp /*data[temp_recipe_id_string].recipe_description*/+"&recipe_id="+temp_recipe_id_string+"";//window.location.href;//"recipe.html";//path.split("/").pop();
                 
                 //Store the page that is going to be loaded after losing focus
-                chrome.storage.sync.set({page_on_load: page}, function(){
+                chrome.storage.sync.set({page_on_load: page}, function()
+                {
                     console.log("page on load is " + page);
                 });
             };
@@ -86,15 +85,13 @@ chrome.storage.sync.get('number_of_recipes', function(data) {
             remove_btn.onclick = function(element) 
             {
                 // Remove recipe and recipe data from local storage
-                chrome.storage.sync.remove([key], function(result) {
-
+                chrome.storage.sync.remove([key], function(result)
+                {
                     //Get the recipe id list and store the new recipe id to that list
-                    chrome.storage.sync.get('recipe_id_list',function(list){
-                      
+                    chrome.storage.sync.get('recipe_id_list',function(list)
+                    {
                       list.recipe_id_list = list.recipe_id_list.filter(e => e !== key);
-                      chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function() {
-                          
-                      });
+                      chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function(){});
                     });
 
                     // Transition user to recipe list page

@@ -1,19 +1,11 @@
 html, body {
     margin: 0;
-    /* height: 100%; */
-    /* margin-right: calc(100% - 100vw); */
-    
 }
 
 body
 {
     background-color: #171b26;
     border-radius: 2em;
-    /* margin-top: 0.5em; */
-    /* margin-bottom: 0.5em; */
-    /* margin-right: calc(100% - 100vw);
-    overflow-x: hidden; */
-    /* overflow-y: hidden; */
     height: 100%;
 }
 
@@ -23,9 +15,6 @@ body
   padding: 2em;
   margin-left: 1em;
   margin-right: 1em;
-  /* margin-top: 0.5em; */
-  /* height: 35em; */
-  /* margin-bottom: 0.5em; */
   border-radius: 2em;
   opacity: 0;
   position: relative;

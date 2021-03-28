@@ -32,7 +32,6 @@ function fadeInUpAnimation()
     
     obj.setAttribute("class", "slideUp");
     setTimeout(enableScroll,1000);
-    
 }
 
 function fadeOutDownAnimation(transition_page_name)
@@ -44,7 +43,6 @@ function fadeOutDownAnimation(transition_page_name)
   obj.removeAttribute("class", "slideUp");
   obj.setAttribute("class","fadeOut");
 
-
   setTimeout(function() {transitionPageTo(transition_page_name)},250);
 }    
 
@@ -53,7 +51,8 @@ function transitionPageTo(transition_page_name)
   window.location.href=transition_page_name;
   
   //Store the page that is going to be loaded after losing focus
-  chrome.storage.sync.set({page_on_load: transition_page_name}, function(){
+  chrome.storage.sync.set({page_on_load: transition_page_name}, function()
+  {
       console.log("page on load is " + transition_page_name);
   });
 

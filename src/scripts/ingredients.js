@@ -12,8 +12,6 @@
 
 import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
-//import numericQuantity from './../../node_modules/numeric-quantity';//'/numeric-quantity';
-
 //This dictionary holds all the information received from wit.ai
 var dict = {};
 
@@ -24,9 +22,6 @@ var promises = [];
 // This function will create add or update something in the dictionary
 async function GenerateRow(res)
 {
-  console.log(res);
-  console.log(Object.keys(res.entities));
-  
   //If the result from wit is blank or undefined then just terminate the function call
   if(res == null || res == undefined)
   {
@@ -68,9 +63,8 @@ async function GenerateRow(res)
   var quantity_found = false;
   
   // Iterate through the entities received from wit.ai
-  Object.keys(res.entities).forEach(function(key) {
-    
-    console.log(res.text);
+  Object.keys(res.entities).forEach(function(key) 
+  {
     var entity_name = res.entities[key][0].name;
     var entity_value = res.entities[key][0].value;
 
@@ -111,7 +105,6 @@ async function GenerateRow(res)
       amount_found = true;
       amount = entity_value;
     }
-
   });
 
   //  _                     _       _     _ 
@@ -122,25 +115,15 @@ async function GenerateRow(res)
   // |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
   // 
   // Logic is needed to see if quantity and amount were found in query
-  // PROBLEM: There should be a strategy to find best solution. The current solution is a bandaid.
-  if(quantity_found && amount_found /*&& (quantity_amount != amount)*/)
+  if(quantity_found && amount_found)
   {
-    // After doing a couple different cases this bandaid causes tons of weird edge case problems
-    // A new strategy is needed for handling these cases
-    //measurement = quantity_measurement;
-    //amount = quantity_amount * amount;
-
     // Testing a new strategy
     var regexp = new RegExp(amount,"gi");
     var amount_count = res.text.match(regexp).length;
-    console.log(amount_count);
-    //var quantity_amount_count = res.text.match('/'+quantity_amount+'/g')
     
     const fraction_regex = new RegExp(/[0-9]*\.?[0-9] *[1-9][0-9]*\/[1-9][0-9]*/gi);
     var fraction_edge_case = res.text.match(fraction_regex);
 
-    // console.log("REGEX");
-    // console.log(fraction_edge_case);
     if(fraction_edge_case.length > 0)
     {
       measurement = quantity_measurement;
@@ -155,8 +138,6 @@ async function GenerateRow(res)
       measurement = quantity_measurement;
       amount = quantity_amount
     }
-    
-    // amount stays unchanged?
   }
   else if(quantity_found)
   {
@@ -185,11 +166,6 @@ async function GenerateRow(res)
     {
       (dict["To Taste & Etc"])[res.text] = "";
     }
-    console.log(dict["To Taste & Etc"]);
-    // console.log("Product: " + product);
-    // console.log("Measurement: " + measurement);
-    // console.log("Amount: " + amount);
-
   }
   // Add product to dictionary with the measurement and amount if its not in the dictionary
   else if(!(product in dict))
@@ -202,21 +178,9 @@ async function GenerateRow(res)
     // Check if the measurement has already been added into the dictionary
     if(measurement in dict[product])
     {
-      // PROBLEM: dangerous to just add amount without checking it
-      // A BUG LIVES HERE!
-      // If a value like 2.5 exists at this location and you add 2, it is output as 22.5 instead of 4.5
-      //     \ /
-      //     oVo
-      // \___XXX___/
-      //  __XXXXX__
-      // /__XXXXX__\
-      // /   XXX   \
-      //      V
       //https://www.npmjs.com/package/numeric-quantity
       //https://www.npmjs.com/package/parse-ingredient
       (dict[product])[measurement] = numericQuantity((dict[product])[measurement]) + numericQuantity(amount);
-      console.log("Adding measurements together");
-      console.log((dict[product])[measurement] );
     }
     else
     {
@@ -224,7 +188,6 @@ async function GenerateRow(res)
       (dict[product])[measurement] = numericQuantity(amount);//amount
     }
   }
-    
 };
 
 // Text area displays the ingredients 
@@ -239,71 +202,56 @@ back_btn.onclick = function(element)
 };
 
 
-async function functionOne() {
-  return new Promise((resolve, reject) => {
+async function functionOne() 
+{
+  return new Promise((resolve, reject) => 
+  {
     // Get the number of recipes stored in local storage
-    chrome.storage.sync.get('number_of_recipes', function(data) {
-
-      console.log("one");
+    chrome.storage.sync.get('number_of_recipes', function(data) 
+    {
       // The number of recipes in storage
       var number_of_recipes = data.number_of_recipes;
 
-      chrome.storage.sync.get('recipe_id_list',function(list){
-        resolve(list.recipe_id_list);
-      });
-    
+      chrome.storage.sync.get('recipe_id_list',function(list){resolve(list.recipe_id_list);});
     });
   })
 };
 
 async function functionTwo(recipe_list)
 {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => 
+  {
     // Get the recipe list out of local storage
-    chrome.storage.sync.get(recipe_list , function(data) 
-    {
-      console.log("three");
-      console.log(data);
-      resolve(data); 
-    });
+    chrome.storage.sync.get(recipe_list , function(data) {resolve(data); });
   });
 }
 
-
-
-
 // Listener for content script message or backgorund script message
 chrome.runtime.onMessage.addListener(
-    
-  function(request, sender, sendResponse) {
-
-      console.log(sender.tab ?
-                  "from a content script:" + sender.tab.url :
-                  "from the extension");
+  function(request, sender, sendResponse) 
+  {
+      
   }
-
 );
 
 
 async function fillList()
 {
   // Iterate through the dictionary of recipe information    
-  Object.keys(dict).forEach(function(key) {
-    console.log("key");
-    console.log(Object.keys(dict[key]));
+  Object.keys(dict).forEach(function(key) 
+  {
     // Insert product name into the grocery list text area
     text_area.value += key + "\n"
 
     // Iterate through each measurement of the product
-    Object.keys(dict[key]).forEach(function(second_key){
+    Object.keys(dict[key]).forEach(function(second_key)
+    {
       // Insert number of measurements for the product
       text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
-      console.log(text_area.value);
     });
 
     // Move on to the next ingredient
     text_area.value += "\n";
-
   })
 
   // Make menu visible
@@ -314,20 +262,15 @@ async function fillList()
 
   //
   fadeInUpAnimation();
-
-  console.log(promises);
-
 };
 
-functionOne().then(data=>{
-
-  console.log(data);
-
+functionOne().then(data=>
+{
   // The list of all recipes
   var recipe_list = data;
 
-  functionTwo(recipe_list).then(data=>{
-
+  functionTwo(recipe_list).then(data=>
+  {
     //  _                     _       _     _ 
     // | |                   | |     (_)   | |
     // | |__   __ _ _ __   __| | __ _ _  __| |
@@ -341,33 +284,28 @@ functionOne().then(data=>{
     // needs to be configured in order to write to text area
     // only once.
     // Iterate through each recipe
-    Object.keys(data).forEach(key => {
-
+    Object.keys(data).forEach(key => 
+    {
       // Parse each ingredient by the return character
       var each_ingredient = data[key].recipe_description.split('\n');
 
-      functionThree(each_ingredient).then(data=>{
-        
-      });
-      
+      functionThree(each_ingredient).then(data=>{  });
     });
   });
 });
 
 async function functionThree(each_ingredient)
 {
-  return new Promise((resolve, reject) => {
-
+  return new Promise((resolve, reject) => 
+  {
         var fetchPromises =[];
         const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
         // Make a wit.ai request for each ingredient
-        each_ingredient.forEach( row => {
-
+        each_ingredient.forEach( row => 
+        {
           // THERE IS A BUG I NEED TO HANDLE FOR BLANK ENTRIES THAT BREAKS MY SCRIPT
           if (row != "" && row != undefined)
           {
-            // console.log("Whats going on");
-            // console.log(row);
             // This is the ingredient string
             // Example: "3 cups of honey"
             const q = encodeURIComponent(row);
@@ -376,38 +314,30 @@ async function functionThree(each_ingredient)
             // HTTP request for wit.ai to parse the ingredient string
             const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
             
-            var myfunc =fetch(uri, {headers: {Authorization: auth}})
+            var myfunc = fetch(uri, {headers: {Authorization: auth}})
             
             fetchPromises.push(myfunc);
           }
         });
         
-        Promise.all(fetchPromises).then(function (responses) {
+        Promise.all(fetchPromises).then(function (responses) 
+        {
           // Get a JSON object from each of the responses
-          return Promise.all(responses.map(function (response) {
-            console.log("response");
-            console.log(response);
-            return response.json();
-          }));
-        }).then(function (data) {
-
-          data.forEach( row=> {
-            
-
+          return Promise.all(responses.map(function (response) {return response.json();}));
+        }).then(function (data) 
+        {
+          data.forEach(row=> 
+          {
             GenerateRow(row);
-            
           });
-
         })
-        .then(function(data){
+        .then(function(data)
+        {
           text_area.value = "";
-          fillList().then(idk=>{
-            console.log("then fill list");
-            console.log(dict);
-          });
-
+          fillList().then(idk=>{});
         })
-        .catch(function (error) {
+        .catch(function (error) 
+        {
           // if there's an error, log it
           console.log(error);
         });
