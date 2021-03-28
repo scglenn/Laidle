@@ -42,13 +42,13 @@ function alert(title, text, type)
             alert_on = false;
         });
         
-        // Add the generated alert html to the top of recipe.html
-        $('body').prepend(alert_html);
-        
         // setTimeout with 0 millisecond delay adds the call back to the queue 
         // This allows for the show & fade classes to animate the alert popup properly
         setTimeout(function() 
         {
+            // Add the generated alert html to the top of recipe.html
+            $('body').prepend(alert_html);
+
             // Alert popup appears and fades in
             alert_html.addClass('show fade');
 

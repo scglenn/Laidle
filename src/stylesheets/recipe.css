@@ -135,7 +135,6 @@ label
 
 .fade {
   position: absolute;
-  /* transition-duration: 0.25s; */
   transition-duration: 0.125s;
   top: 2em;
   z-index: 10;
