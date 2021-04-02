@@ -367,17 +367,17 @@ async function awaitForWITReponse(each_ingredient)
 
 //https://www.whateatly.com/list-of-vegetables/
 var veggie_dictionary = {
-'Acorn Squash': null,
-'Ahipa': null,
-'Amaranth': null,
-'American Groundnut': null,
-'Aonori': null,
-'Arame': null,
-'Arracacha': null,
-'Arrowroot': null,
-'Artichoke': null,
-'Arugula': null,
-'Asparagus': null,
+'Acorn Squash': null, // pepper squash, Des Moines squash
+'Ahipa': null, // Not common
+'Amaranth': null, // Not common, but like gronaola recipes
+'American Groundnut': null, // Not common
+'Aonori': null, // Not common, but this is seaweed
+'Arame': null, // Not common 
+'Arracacha': null, // Not common
+'Arrowroot': null, // Not common
+'Artichoke': null, // globe artichoke, French artichoke, green artichoke
+'Arugula': null, // it has different names but i dont want to do that
+'Asparagus': null, // 
 'Adzuki Bean': null,
 'Bamboo Shoots': null,
 'Banana Squash': null,
@@ -388,7 +388,7 @@ var veggie_dictionary = {
 'Black Radish': null,
 'Black Salsify': null,
 'Bok Choy': null,
-'Broadleaf Arrowhead': null,
+'Broadleaf Arrowhead': null, // Different names for vegetables
 'Broccoflower': null,
 'Broccoli': null,
 'Broccolini': null,
