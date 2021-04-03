@@ -366,6 +366,9 @@ async function awaitForWITReponse(each_ingredient)
 }
 
 //https://www.whateatly.com/list-of-vegetables/
+// Synonyms for other veggies are listed
+// Some veggies are listed as "Not Common". These are lower priority veggies that 
+// im not planning to train for now
 var veggie_dictionary = {
 'Acorn Squash': null, // pepper squash, Des Moines squash
 'Ahipa': null, // Not common
@@ -376,197 +379,197 @@ var veggie_dictionary = {
 'Arracacha': null, // Not common
 'Arrowroot': null, // Not common
 'Artichoke': null, // globe artichoke, French artichoke, green artichoke
-'Arugula': null, // it has different names but i dont want to do that
-'Asparagus': null, // 
-'Adzuki Bean': null,
-'Bamboo Shoots': null,
-'Banana Squash': null,
-'Beetroot': null,
-'Belgian Endive': null,
-'Bell Peppers': null,
-'Black Eyed Pea': null,
-'Black Radish': null,
-'Black Salsify': null,
-'Bok Choy': null,
-'Broadleaf Arrowhead': null, // Different names for vegetables
-'Broccoflower': null,
-'Broccoli': null,
-'Broccolini': null,
-'Brussel Sprouts': null,
-'Burdock Roots': null,
-'Buttercup Squash': null,
-'Butternut Squash': null,
-'Cabbage': null,
-'Cactus': null,
-'Camas': null,
-'Canna': null,
-'Caper': null,
-'Cardoon': null,
-'Carrot': null,
-'Cassava': null,
-'Catsear': null,
-'Cauliflower': null,
-'Celeriac': null,
-'Celery': null,
-'Celtuce': null,
-'Chaya': null,
-'Chayote Squash': null,
-'Cherry Tomato': null,
-'Chick Pea': null,
-'Chickweed': null,
-'Chicory': null,
-'Chives': null,
-'Chrysanthemum': null,
-'Collard Greens': null,
-'Common Beans': null,
-'Crookneck Squash': null,
-'Common Purslane': null,
-'Courgette Flowers': null,
-'Cress': null,
-'Cucumbers': null,
-'Dabberlocks': null,
-'Daikon': null,
-'Dandelion': null,
-'Delicata Squash': null,
-'Daylily': null,
-'Dill': null,
-'Dolichos': null,
-'Drumstick': null,
-'Dulse': null,
-'Earthnut Pea': null,
-'Eggplant': null,
-'Elephant Foot Yam': null,
-'Elephant Garlic': null,
-'Endive': null,
-'Ensete': null,
-'Fat Hen': null,
-'Fava bean': null,
-'Fennel': null,
-'Fiddlehead Green': null,
-'Florence Fennel': null,
-'Fluted Pumpkin': null,
-'Galangal': null,
-'Garbanzo': null,
-'Garden Rocket': null,
-'Garlic': null,
-'Garlic Chives': null,
-'Ginger': null,
-'Golden Samphire': null,
-'Good King Henry': null,
-'Greater Plantain': null,
-'Green Beans': null,
-'Green Soybeans': null,
-'Guar': null,
-'Hamburg Parsley': null,
-'Hijiki': null,
-'Horse Gram': null,
-'Horseradish': null,
-'Indian Pea': null,
-'Kale': null,
-'Kohlrabi': null,
-'Komatsuna': null,
-'Kombu': null,
-'Kurrat': null,
-'Lagos Bologi': null,
-'Land Cress': null,
-'Laver': null,
-'Leek': null,
-'Lemongrass': null,
-'Lentil': null,
-'Lettuce': null,
-'Lima Bean': null,
-'Lotus Root': null,
-'Malabar Spinach': null,
-'Mangetout': null,
-'Manoa': null,
-'Mashua': null,
-'Mulukhiyah': null,
-'Mizuna': null,
-'Morel Mushrooms': null,
-'Moth Bean': null,
-'Mozuku': null,
-'Mung Bean': null,
-'Mushrooms': null,
-'Mustard Greens': null,
-'Napa Cabbage': null,
-'New Zealand Spinach': null,
-'Nopal': null,
-'Nori': null,
-'Ogonori': null,
-'Okra': null,
-'Onion': null,
-'Orache': null,
-'Pak Choy': null,
-'Paracress': null,
-'Parsnip': null,
-'Peas': null,
-'Pearl Onion': null,
-'Pigeon Pea': null,
-'Pignut': null,
-'Potato': null,
-'Prussian Asparagus': null,
-'Prairie Turnip': null,
-'Pumpkin': null,
-'Radicchio': null,
-'Radish': null,
-'Ramp': null,
-'Rapini': null,
-'Red Leaf Lettuce': null,
-'Ricebean': null,
-'Runner Bean': null,
-'Rutabaga': null,
-'Salad Savoy': null,
-'Salsify': null,
-'Samphire': null,
-'Scorzonera': null,
-'Sculpit': null,
-'Sea Beet': null,
-'Sea Grape': null,
-'Sea Kale': null,
-'Sea Lettuce': null,
-'Shallot': null,
-'Sierra Leone Bologi': null,
-'Skirret': null,
-'Snap Pea': null,
-'Snow Pea': null,
-'Soko': null,
-'Sorrel': null,
-'Sour Cabbage': null,
-'Soybean': null,
-'Spinach': null,
-'Spring Onion': null,
-'Scallion': null,
-'Squash Blossoms': null,
-'Summer Squash': null,
-'Swede': null,
-'Sweet Potato': null,
-'Taro': null,
-'Tarwi': null,
-'Tatsoi': null,
-'Tepary Bean': null,
-'Tigernut': null,
-'Tomatillo': null,
-'Tomato': null,
-'Tree Onion': null,
-'Turmeric': null,
-'Turnip': null,
-'Urad Bean': null,
-'Ulluco': null,
-'Wasabi': null,
-'Water Chestnut': null,
-'Water Caltrop': null,
-'Water Spinach': null,
-'Watercress': null,
-'Welsh Onion': null,
-'Wheatgrass': null,
-'Wild Leek': null,
-'Winged Bean': null,
-'Winter Squash': null,
-'Yam': null,
-'Yao Choy': null,
-'Yardlong Bean': null,
-'Yarrow': null,
-'Yuca Root': null,
-'Yukon Gold Potatoes': null,
-'Zucchini': null
+'Arugula': null, // other names determined to be unimportant
+'Asparagus': null, // garden asparagus, sparrow grass
+'Adzuki Bean': null, // red bean
+'Bamboo Shoots': null, // bamboo sprouts
+'Banana Squash': null, // Not commom
+'Beetroot': null, // Beet, table beet, garden beet, red beet, dinner beet, golden beet
+'Belgian Endive': null, // Endive
+'Bell Peppers': null, // sweet pepper, pepper, capsicum
+'Black Eyed Pea': null, // other names determined to be unimportant
+'Black Radish': null,// other names determined to be unimportant
+'Black Salsify': null, // Not Common
+'Bok Choy': null, // other names determined to be unimportant
+'Broadleaf Arrowhead': null, // Not Common
+'Broccoflower': null, // Green cauliflower, Romanesco, Romanesco broccoli
+'Broccoli': null, // other names determined to be unimportant
+'Broccolini': null, // baby broccoli
+'Brussel Sprouts': null, // other names determined to be unimportant
+'Burdock Roots': null, // Not Common
+'Buttercup Squash': null, // Not Common
+'Butternut Squash': null, // butternut pumpkin, gramma
+'Cabbage': null, // green cabbage, red cabbage, white cabbage
+'Cactus': null, // Not Common
+'Camas': null, // Not Common
+'Canna': null, // Not Common
+'Caper': null, // Weird edge case, typically pickeld, does have a few different names
+'Cardoon': null, // Not Common
+'Carrot': null, // purple, black, red, white, yellow, orange, wild carrot
+'Cassava': null, // Not Common
+'Catsear': null, // Not Common
+'Cauliflower': null, // other names determined to be unimportant
+'Celeriac': null, // Celery root, knob celery, turnip-rooted celery
+'Celery': null, // other names determined to be unimportant
+'Celtuce': null, // stem lettuce, celery lettuce, asparagus lettuce, Chinese lettuce
+'Chaya': null, // Not Common
+'Chayote Squash': null, // Not Common
+'Cherry Tomato': null,// plum tomatoes and grape tomatoes are really similiar
+'Chick Pea': null,// garbanzo,garbanzo bean, Egyptian pea,gram?
+'Chickweed': null, // Not Common
+'Chicory': null, // Not Common
+'Chives': null, // other names determined to be unimportant
+'Chrysanthemum': null, // Not Common
+'Collard Greens': null, // Collard
+'Common Beans': null, // French Bean
+'Crookneck Squash': null, //yellow squash, summer squash, yellow crookneck squash
+'Common Purslane': null, // Not Common
+'Courgette Flowers': null, // Not Common
+'Cress': null, // https://en.wikipedia.org/wiki/Cress not sure
+'Cucumbers': null, //No other names but keep track of things that could be "pickled"
+'Dabberlocks': null, // Not Common
+'Daikon': null, // Daikon Radish
+'Dandelion': null, // Not Common
+'Delicata Squash': null, // peanut squash, Bohemian squash, sweet potato squash
+'Daylily': null, // Not Common
+'Dill': null, // other names determined to be unimportant
+'Dolichos': null,// Not Common
+'Drumstick': null, // Not Common
+'Dulse': null, // Not Common
+'Earthnut Pea': null, // Not Common
+'Eggplant': null, // aubergine, brinjal
+'Elephant Foot Yam': null, // Not Common
+'Elephant Garlic': null, // Not Common
+'Endive': null, // other names, may have listed as synonym before
+'Ensete': null, // Not Common
+'Fat Hen': null, // Not Common
+'Fava bean': null, //  broad bean, faba bean
+'Fennel': null, // other names determined to be unimportant
+'Fiddlehead Green': null, // Not Common
+'Florence Fennel': null, // Fennel
+'Fluted Pumpkin': null, // Not Common
+'Galangal': null, // Not Common
+'Garbanzo': null, // covered already
+'Garden Rocket': null, // arugula, if not alraedy covered
+'Garlic': null, // other names determined to be unimportant
+'Garlic Chives': null, // Not Common
+'Ginger': null, // giner root
+'Golden Samphire': null, // Not Common
+'Good King Henry': null, // Not Common
+'Greater Plantain': null, // Not Common
+'Green Beans': null, // French beans, string beans, snap beans, snaps, baguio beans
+'Green Soybeans': null, // Edamame
+'Guar': null, // Not Common
+'Hamburg Parsley': null, // Parsley, Garden Parsley, Curly leaf parsley, Flat leaf parsley, root parsley
+'Hijiki': null, // Not Common
+'Horse Gram': null, // Not Common
+'Horseradish': null, // other names determined to be unimportant
+'Indian Pea': null, // Not Common
+'Kale': null, // other names determined to be unimportant
+'Kohlrabi': null, // cabbage turnip, german turnip
+'Komatsuna': null, // Not Common
+'Kombu': null, // Kelp
+'Kurrat': null, // Not Common
+'Lagos Bologi': null, // Not Common
+'Land Cress': null, // Not Common
+'Laver': null, // Seaweed
+'Leek': null, // other names determined to be unimportant
+'Lemongrass': null, // other names determined to be unimportant
+'Lentil': null, // Puy Lentil, Green Lentil, Red Lentil
+'Lettuce': null, // Romaine Lettuce, Head Lettuce, Loose-leaf lettuce, iceberge lettuce, butterhead lettuce, bibb lettuce, a few other names
+'Lima Bean': null, // butter bean, sieva bean, double bean, madagascar bean, chad bean, wax bean
+'Lotus Root': null, // Not Common
+'Malabar Spinach': null, // Not Common
+'Mangetout': null, // another name for snap pea, sugar pea, snow pea?
+'Manoa': null, // Not Common
+'Mashua': null, // Not Common
+'Mulukhiyah': null, // Not Common
+'Mizuna': null, // water greens, kyona, japanese mustard greens, spider mustard
+'Morel Mushrooms': null, // other names determined to be unimportant
+'Moth Bean': null, // Not Common
+'Mozuku': null, // Not Common
+'Mung Bean': null, // Not Common
+'Mushrooms': null, // tons of different names
+'Mustard Greens': null, // tons of different names
+'Napa Cabbage': null, // Napa, chinese cabbage
+'New Zealand Spinach': null, // Not Common
+'Nopal': null, // Not Common
+'Nori': null, // This is more of a dried good
+'Ogonori': null, // Not Common
+'Okra': null, // ladies' fingers, ochro
+'Onion': null, // bulb onion, common onion, tons of different names
+'Orache': null, // Not Common
+'Pak Choy': null, // already covered, also called bok choy
+'Paracress': null, // other names determined to be unimportant
+'Parsnip': null, // Not Common
+'Peas': null, // already covered
+'Pearl Onion': null, // other names determined to be unimportant also can be canned
+'Pigeon Pea': null, // Not Common
+'Pignut': null, // Not Common
+'Potato': null, // Tons of different names
+'Prussian Asparagus': null, // should be covered by asparagus
+'Prairie Turnip': null, // should be covered by turnip
+'Pumpkin': null, // tons of different names
+'Radicchio': null, // italian chicory
+'Radish': null, // other names determined to be unimportant
+'Ramp': null, // ramps, ramson, wild leek, wood leek, wild garlic
+'Rapini': null, // aka broccoli rabe, should be covered
+'Red Leaf Lettuce': null, // other names determined to be unimportant
+'Ricebean': null, // Not Common
+'Runner Bean': null, // another common name is butter bean
+'Rutabaga': null, // Swede, swedish turnip, neep
+'Salad Savoy': null, // Savoy cabbage
+'Salsify': null, // Not Common
+'Samphire': null, // Not Common
+'Scorzonera': null, // Not Common
+'Sculpit': null, // Not Common
+'Sea Beet': null, // Not Common
+'Sea Grape': null, // Not Common
+'Sea Kale': null, // seakale, crambe
+'Sea Lettuce': null, // green nori
+'Shallot': null, // other names determined to be unimportant
+'Sierra Leone Bologi': null, // Not Common
+'Skirret': null, // Not Common
+'Snap Pea': null, // already covered
+'Snow Pea': null, // already covered
+'Soko': null, // Not Common
+'Sorrel': null, // other names determined to be unimportant
+'Sour Cabbage': null, // sauerkraut but this is usually canned, edge case
+'Soybean': null, // Usually made into some paste or other product, edge case
+'Spinach': null, // Tons of names
+'Spring Onion': null, // Scallion, green onion, sibies
+'Scallion': null, // already covered
+'Squash Blossoms': null, // Not common
+'Summer Squash': null, // a general name
+'Swede': null, // already covered
+'Sweet Potato': null, // sweetpotato
+'Taro': null, //kalo, dasheen, godere
+'Tarwi': null, // Not Common
+'Tatsoi': null, // Not Common
+'Tepary Bean': null, // Not Common
+'Tigernut': null, // Not Common
+'Tomatillo': null, // Mexican husk tomato
+'Tomato': null, // Tons of different names
+'Tree Onion': null, // Not common
+'Turmeric': null, // other names determined to be unimportant
+'Turnip': null, // white turnip
+'Urad Bean': null, // Not Common
+'Ulluco': null, // Not Common
+'Wasabi': null, // Japanese horseradish
+'Water Chestnut': null, // Chinese water chestnut, edge case because it can be canned
+'Water Caltrop': null, // Not Common
+'Water Spinach': null, // Not Common
+'Watercress': null, // yellowcress
+'Welsh Onion': null, // aka spring onion, not sure how important
+'Wheatgrass': null, // other names determined to be unimportant
+'Wild Leek': null, // Not Common
+'Winged Bean': null, // Not Common
+'Winter Squash': null, // general name
+'Yam': null, // sweet potato
+'Yao Choy': null, // Not Common
+'Yardlong Bean': null, // Not Common
+'Yarrow': null, // Not Common
+'Yuca Root': null, // Not Common
+'Yukon Gold Potatoes': null, // should be covered by potato already
+'Zucchini': null // other names determined to be unimportant
 };
