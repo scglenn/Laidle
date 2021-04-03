@@ -73,6 +73,49 @@ async function GenerateRow(res)
     else if(entity_name == "product")
     {
       product = entity_value;
+
+      // For now the first entity is what is going to determine the category
+      // Assuming this will change eventually
+      console.log("Checking entity json structure");
+      console.log(res.entities[key][0]);
+
+      if(res.entities[key][0].entities[0].name != null)
+      {
+        let store_location = res.entities[key][0].entities[0].name;
+
+        if( store_location == "vegetable")
+        {
+  
+        }
+        else if (store_location == "fruit")
+        {
+
+        }
+        else if(store_location == "meat")
+        {
+
+        }
+        else if (store_location == "refrigerated")
+        {
+
+        }
+        else if (store_location == "seafood")
+        {
+          
+        }
+        else if (store_location == "frozen")
+        {
+
+        }
+        else
+        {
+          // Dry goods and etc
+        }
+      }
+
+
+      
+
     }
     else if(entity_name == "wit$quantity")
     {
@@ -421,6 +464,7 @@ var veggie_dictionary = {
 'Chives': null, // other names determined to be unimportant
 'Chrysanthemum': null, // Not Common
 'Collard Greens': null, // Collard
+'Corn' : null, //
 'Common Beans': null, // French Bean
 'Crookneck Squash': null, //yellow squash, summer squash, yellow crookneck squash
 'Common Purslane': null, // Not Common
@@ -443,7 +487,7 @@ var veggie_dictionary = {
 'Endive': null, // other names, may have listed as synonym before
 'Ensete': null, // Not Common
 'Fat Hen': null, // Not Common
-'Fava bean': null, //  broad bean, faba bean
+'Fava bean': null, //  broad bean, faba bean, probably canned or dry good
 'Fennel': null, // other names determined to be unimportant
 'Fiddlehead Green': null, // Not Common
 'Florence Fennel': null, // Fennel
@@ -453,7 +497,7 @@ var veggie_dictionary = {
 'Garden Rocket': null, // arugula, if not alraedy covered
 'Garlic': null, // other names determined to be unimportant
 'Garlic Chives': null, // Not Common
-'Ginger': null, // giner root
+'Ginger': null, // ginger root
 'Golden Samphire': null, // Not Common
 'Good King Henry': null, // Not Common
 'Greater Plantain': null, // Not Common
@@ -573,3 +617,273 @@ var veggie_dictionary = {
 'Yukon Gold Potatoes': null, // should be covered by potato already
 'Zucchini': null // other names determined to be unimportant
 };
+
+//https://en.wikipedia.org/wiki/List_of_culinary_fruits
+var fruit_dictionary = {
+
+// website: new pi
+// Webscraping:var test = document.getElementsByClassName('fp-item-name');
+// Webscraping: Array.from(test).forEach(function(x) {console.log(x.innerText)});
+// [x] Organic Yellow Bananas
+// [x] Organic Braeburn Apple
+// [] New Pi Bakehouse French Baguette
+// [x] Organic Lemon
+// [/] Organic Pink Lady Apples
+// [x] Organic Navel Oranges
+// [x] Organic Anjou Pears
+// [x] Organic Limes
+// [x] Conventional Red Grapes
+// [/] Organic Ambrosia Apples
+// [x] Organic Minneola Tangelos
+// [/] Organic Lady Alice Apples
+// [x] Mandarin Cuties Og
+// [x] Del Real Dates, Organic, Medjool
+// [x] Organic Red Grapefruit
+// [x] Organic Kiwi
+// [/] Organic Blood Oranges
+// [/] Organic 2 LB Bagged Lemons
+// [/] Organic Gala Apple 3lb Bag
+// [x] Mango Ataulfo
+// [/] Organic Mangos
+// [/] Lemon Meyer
+// [x] Pineapple, Large
+// [x] Wonderful Halos Mandarins, 3lb Bag
+// [/] White/Green Seedless Grapes
+// [/] Buffalo Ridge Apple Chips
+// [/] Kiwi
+// [x] Plantains
+// [/] Cut Fruit Express Mango Spears
+// [x] Coconut Date Roll
+// [/] Cut Fruit Express Mango Sliced
+// [/] Organic Navel Oranges 4 LB Bag
+// [/] Apple Granny Smith 3 Lb Bag
+// [/] Pineapple
+// [x] Cut Fruit Express Cantaloupe Cubes
+// [x] New Pi Jackfruit Comm
+// [/] Cut Fruit Express Cantaloupe Chunks
+// [/] Banana Over Ripe
+// [/] Dates Fresh Medjool
+// [/] Cut Fruit Express Pineapple Cubes
+// [this isnt even a fruit tho] Rolling Hill Rolling Hills Watercress
+// [xPapaya Sliced
+// [/] Plantains
+// [/] Cut Fruit Express Pineapple Chunks
+// [/] Apple Opal Organic
+// [x] Pomegranate Arils
+// [x] Driscolls Sweet Strawberries
+// [x] Cut Fruit Express Watermelon Cubes
+// [/] White/Green Seedless Grapes
+// [/] Cooking/Mexican Papaya/Pawpaw
+// [/] Orange Mandarin
+// [/] Mexican Papaya
+// [/] Cut Fruit Express Watermelon Cubes
+// [/] Apple Koru Og
+// [/] Cut Fruit Express Watermelon Cubes
+// [idk what this is] Tomato Frenzy Og
+// [x] Starfruit
+// [/] Cut Fruit Express Strawberry/Blueberry/Kiwi Cup
+// [/] Apple Braeburn
+// [x] Cut Fruit Express Honeydew Cubes
+// [/] Apple Pinata
+// [/] Organic 3 LB Bag Honeycrisp Apples
+// [/] Cut Fruit Express Strawberry Cup
+// [/] Native Forest Jackfruit Young
+// [these arent fruits tho] Onions Pearl Gold
+// [x] Tangerine Murcott
+// [/] Cut Fruit Express Pineapple Peeled And Cored
+// [/] Cut Fruit Express Mango Kiwi Mix
+// [/] Cut Fruit Express Pineapple Cubes
+// [/] Grapes Black
+// [/] Starfruit
+// [/] White Grapefruit, Large
+// [/] Cut Fruit Express Pomegranate Seeds
+// [/] Cut Fruit Express Grape Mix Red And Green
+// [x] Dragon fruit
+// [/] Cut Fruit Express Pineapple Cubes
+// [x] Cut Fruit Express Melon Cataloupe Grape Mix
+// [x] Limequats
+// [this is a synonym for lemon] Lemon Meyer
+// [/] Grapefruit
+// [/] Tangerine
+// [/] Cut Fruit Express Watermelon Cubes
+// [/] Young Coconut
+// [/] Buffalo Ridge Orchard Apples
+// [/] Red Grapefruit
+// [/] Yellow Bananas
+// [/] Fuji Apples, Large
+// [/] Braeburn Apples, Large
+// [/] Red Bananas
+// [/] Coconut Baby
+// [/] Coconut Young
+// [/] Cut Fruit Express Honeydew Cubes
+// [/] Navel Oranges, Small
+// [x] Pear Starkrimson
+// [/] Organic Cara Cara (Pink) Navel Oranges
+// [/] Watermelon Seedless
+// [/] Cut Fruit Express Pineapple Red Grape Mix
+// [/] Apple Macintosh
+// [/] Apple Spartan
+// [/] Apple Honeycrisp
+// [/] Apple Ginger Gold
+// [/] Grapes Concord
+// [x] Fresh Prunes
+// [x] Clementine / Mandarins
+// [/] Blueberries
+// [/] Pink Grapefruit, Small
+// [already classified in the veggie] Ginger Root
+// [/] Kiwi Golden
+// [/] Red Mango, Large
+// [/] Pink Lady Apples, Large
+// [/] Pear Comice
+// [/] Apple Autumn Glory
+// [/] Lemons, Large
+// [/] Red Anjou Pears
+// [/] Bosc Pears, Large
+// [/] Minneola Tangelo
+// [/] Red Raspberries
+// [/] Lemons, Small
+// [/] Blackberries
+// [/] Manderin, Satsuma
+// [/] Apple Sciros Organic
+// [/] Apple Haralson
+// [/] Blueberries
+// [/] Tangelo
+// [/] Blood Oranges
+// [/] Melon Orange Cantaline
+// [x] kumquat
+// [x] papaya
+// [x] dragon fruit
+// [x] meyer lemon vs lemon
+// [x] blood orange
+// [x] kiwi
+// [x] pomelo? type of grapefruit
+// [x] jackfruit
+// [x] fig, edgecase because can be dried or fresh
+// [x] polmegranate
+// [x] apricots
+// [x] plumcots
+// [x] plums
+// [x] leches
+// [x] passion fruit
+// [x] star fruit
+// [x] plantains
+// [x] persimmon
+// [x] cantelope = musk melon
+} 
+
+// This list can probably be fairly small
+// It gets tricky when the cut of meat is used instead
+
+var meat_dictionary = {
+// Generic words: Rib, Chop, Loin
+// Beef, chuck, ribeye, stew meat, short rib, brisket, new york strip, strip, flat iron, tri-tip, flank steak
+//      top sirloin, beef tenderloin, rib eye steak, top round steak, chuck pot roast, 
+// Chicken, chicken wings
+// Roast, Chuck roast, rump roast
+// Steak, be careful of situations with ham steak
+// Bacon
+// Turkey
+// Ham, pork, chorizo, sausage? but could be beef also, butt roast, kielbasa, babby back ribs
+// Bratwurst, brawt, brat
+// Hotdog, hot dog
+// Lamb, lamb shoulder roast, rack of lamb
+// pepperoni, salami, salame, andoulle, Braunschweiger
+// corned beef
+// Pancetta, prosciutto
+// weiners
+// Duck
+// Roast beef
+// meat balls
+// veggie burgers is a frozen item
+// liver
+// kidney
+// bison
+}
+
+var refrigerated_dictionary = {
+// Butter
+// Margarine
+// Cheese
+// Mozzarella
+// cheddar
+// feta
+// mexican blemd
+// parmesan
+// reggiano
+// gouda
+// pepper jack
+// colby jack
+// muenster
+// monterey jack
+// brie
+// Pecorino Romano
+// burrata
+// queso
+// havarti
+// fontina
+// gruyere
+// swiss
+// gorgonzola
+// asiago
+// Provolone  
+// Blue
+// Cottage Cheese
+// Cream
+// Creamer
+// Eggnog, Nog
+// Sour Cream
+// Milk
+// Yogurt
+// Eggs
+// Tofu
+// Juice --> could be in dry good?
+// Lemonade
+// Water --> could be in dry good?
+// Half & Half
+// Pudding
+}
+
+// dictionary for seafood?
+var seafood_dictionary = {
+ // Salmon
+ // Shrimp
+ // Scallops
+ // Oysters
+ // Clams
+ // muscles
+ // Crab
+ // Lobster
+ // Prawn
+ // Herring
+ // Trout
+ // Fish
+ // Tilapia
+ // Catfish
+ // Red Snapper
+ // Halibut
+ // sword fish
+ // Cod
+}
+
+// frozen goods may be indicated by the use of "frozen" in product text
+var frozen_dictionary = {
+ // Frozen
+ // Pie Crust
+ // Pastry Dough
+ // Custard
+ // Gelato
+ // Ice Cream
+ // Ice Cream Cones
+ // Popsicles
+ // Sorbet
+ // Sherbet
+ // Tamale
+ // bag -> can this be applied to frozen foods or dry foods?
+}
+
+// canned/dry goods may be indicated by the measurement or if it doesnt fit in the other categories
+// dry goods & etc
+var dry_good_and_etc_dictionary = {
+  // This will most likely be ect
+}
+
