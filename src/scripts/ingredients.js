@@ -55,6 +55,8 @@ async function GenerateRow(res)
   
   // This keeps track of whether wit found a "quanitity" entity.
   var quantity_found = false;
+
+  var current_entities_category =  "Etc";
   
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
@@ -78,43 +80,67 @@ async function GenerateRow(res)
       // Assuming this will change eventually
       console.log("Checking entity json structure");
       console.log(res.entities[key][0]);
+      console.log(res.entities);
 
-      if(res.entities[key][0].entities[0].name != null)
+      if(res.entities[key][0].entities[0] != null)
       {
         let store_location = res.entities[key][0].entities[0].name;
-
+        
+        // Check if the current measurement indicates a "Dry Goods" Item
         if( store_location == "vegetable")
         {
-  
+          current_entities_category = store_location; 
         }
         else if (store_location == "fruit")
         {
-
+          current_entities_category = store_location; 
         }
         else if(store_location == "meat")
         {
-
+          current_entities_category = store_location; 
         }
-        else if (store_location == "refrigerated")
+        else if (store_location == "fridge")
         {
-
+          current_entities_category = store_location; 
         }
         else if (store_location == "seafood")
         {
-          
+          current_entities_category = store_location; 
         }
-        else if (store_location == "frozen")
+        else if (store_location == "freezer")
         {
-
+          current_entities_category = store_location; 
         }
         else
         {
-          // Dry goods and etc
+          current_entities_category = "etc";
+        }
+
+        if(res.entities['measurement:measurement'] != null)
+        {
+          let dry_good_check = res.entities['measurement:measurement'][0].value.includes("can") ||
+                               product.includes("oil") || product.includes("sauce") || product.includes("chip") || 
+                               product.includes("powder") || product.includes("juice");
+          
+          if ( dry_good_check == true )
+          {
+            current_entities_category = "etc"//"dry goods";
+          }
         }
       }
+      else
+      {
+        let dry_good_check = product.includes("oil") || product.includes("sauce") || product.includes("chip") || product.includes("juice");
 
-
-      
+        if ( dry_good_check == true )
+        {
+          current_entities_category = "etc"//"dry goods";
+        }
+        else
+        {
+          current_entities_category = "etc";
+        }
+      }
 
     }
     else if(entity_name == "wit$quantity")
@@ -210,6 +236,7 @@ async function GenerateRow(res)
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
       dict["To Taste & Etc"] = {[res.text]: "" };
+      //dict[product]["category"] = current_entities_category;
     }
     else
     {
@@ -221,6 +248,7 @@ async function GenerateRow(res)
   {
     // Add product to dictionary with the measurement and amount if its not in the dictionary
     dict[product] = {[measurement] : numericQuantity(amount)};
+    dict[product]["category"] = current_entities_category;
   }
   else
   {
@@ -240,7 +268,16 @@ async function GenerateRow(res)
 };
 
 // Text area displays the ingredients 
-var text_area = document.getElementById('ingredientsDescription');
+//var text_area = document.getElementById('ingredientsDescription');
+var vegetable_list = document.getElementById('vegetable');
+var fruit_list = document.getElementById('fruit');
+var meat_list = document.getElementById('meat');
+var fridge_list = document.getElementById('fridge');
+var seafood_list = document.getElementById('seafood');
+var freezer_list = document.getElementById('freezer');
+var dry_list = document.getElementById('dry goods');
+var etc_list = document.getElementById('etc');
+
 // Back button to go back
 var back_btn = document.getElementById('back');
 
@@ -281,21 +318,48 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {})
 // Writes the ingredient list to the text area
 async function fillList()
 {
+  
+  // switch(dict[key]["category"])
+  // {
+  //   case "vegetable":
+  //     break;
+  //   case "fruit":
+  //     break;
+  //   case "meat":
+  //     break;
+  //   case "fridge":
+  //     break;
+  //   case "seafood":
+  //     break;
+  //   case "freezer":
+  //     break;
+  //   case "dry goods":
+  //     break;
+  //   case "etc":
+  //     break;
+  // }
   // Iterate through the dictionary of recipe information    
   Object.keys(dict).forEach(function(key) 
   {
+    let current_text_area = document.getElementById(dict[key]["category"]);
+    
+    console.log("What?");
+    console.log(key);
     // Insert product name into the grocery list text area
-    text_area.value += key + "\n"
+    current_text_area.value += key /*+ " : " + dict[key]["category"]*/ + "\n";
 
     // Iterate through each measurement of the product
     Object.keys(dict[key]).forEach(function(second_key)
     {
-      // Insert number of measurements for the product
-      text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
+      if(second_key != "category")
+      {
+        // Insert number of measurements for the product
+        current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
+      }
     });
 
     // Move on to the next ingredient
-    text_area.value += "\n";
+    current_text_area.value += "\n";
   })
 
   // Make menu visible
@@ -394,8 +458,60 @@ async function awaitForWITReponse(each_ingredient)
     {
       // Clear text area before filling the text area
       // This is a big bandaid currently, due to the list being filled multiple times
-      text_area.value = "";
-      fillList().then(idk=>{});
+      //text_area.value = "";
+      vegetable_list.value = "";
+      fruit_list.value = "";
+      meat_list.value = "";
+      fridge_list.value = "";
+      seafood_list.value = "";
+      freezer_list.value = "";
+      dry_list.value = "";
+      etc_list.value = "";
+      fillList().then(idk=>{
+        
+      });
+    })
+    .then(function(data)
+    {
+      if(vegetable_list.value == "")
+      {
+        document.getElementById('veggie_div').remove();
+      }
+  
+      if(fruit_list.value == "")
+      {
+        document.getElementById('fruit_div').remove();
+      }
+  
+      if(meat_list.value == "")
+      {
+        document.getElementById('meat_div').remove();
+      }
+  
+      if(fridge_list.value == "")
+      {
+        document.getElementById('fridge_div').remove();
+      }
+
+      if(etc_list.value == "")
+      {
+        document.getElementById('etc_div').remove();
+      }
+  
+      if(seafood_list.value == "")
+      {
+        document.getElementById('seafood_div').remove();
+      }
+  
+      if(freezer_list.value == "")
+      {
+        document.getElementById('freezer_div').remove();
+      }
+
+      if(dry_list.value == "")
+      {
+        document.getElementById('dry_goods_div').remove();
+      }
     })
     .catch(function (error) 
     {
@@ -403,8 +519,11 @@ async function awaitForWITReponse(each_ingredient)
       console.log(error);
     });
 
+    
+
     // Resolve the promise and return dict
     resolve(dict);
+    initializeAnimation();
   });
 }
 
@@ -776,28 +895,41 @@ var fruit_dictionary = {
 
 var meat_dictionary = {
 // Generic words: Rib, Chop, Loin
-// Beef, chuck, ribeye, stew meat, short rib, brisket, new york strip, strip, flat iron, tri-tip, flank steak
-//      top sirloin, beef tenderloin, rib eye steak, top round steak, chuck pot roast, 
-// Chicken, chicken wings
-// Roast, Chuck roast, rump roast
-// Steak, be careful of situations with ham steak
-// Bacon
-// Turkey
-// Ham, pork, chorizo, sausage? but could be beef also, butt roast, kielbasa, babby back ribs
-// Bratwurst, brawt, brat
-// Hotdog, hot dog
-// Lamb, lamb shoulder roast, rack of lamb
-// pepperoni, salami, salame, andoulle, Braunschweiger
-// corned beef
-// Pancetta, prosciutto
-// weiners
-// Duck
-// Roast beef
-// meat balls
-// veggie burgers is a frozen item
-// liver
-// kidney
-// bison
+// [x] Beef
+// [x] chuck
+// [x] ribeye
+// [hold off] stew meat -> trained on meat instead
+// [x] short rib - > trained on rib instead
+// [x] brisket
+// [x] new york strip, strip -> trained on strip instead
+// [x] flat iron
+// [x] tri-tip
+// [x] flank steak -> trained on steak instead
+// [x] top sirloin -> trained on sirloin
+// [x] beef tenderloin
+// [/] rib eye steak - > should be a synonym
+// [/] top round steak
+// [x] chuck pot roast -> trained on roast instead
+// [x] Chicken, chicken wings
+// [x] Roast, Chuck roast, rump roast -> trained on rump
+// [] Steak, be careful of situations with ham steak
+// [x] Bacon
+// [x] Turkey
+// [x] Ham, pork, chorizo, sausage? but could be beef also, butt roast, kielbasa, babby back ribs
+// [x] Bratwurst, brawt, brat
+// [x] Hotdog, hot dog
+// [x] Lamb, lamb shoulder roast, rack of lamb
+// [x] pepperoni, salami, salame, andoulle, Braunschweiger
+// [x] corned beef
+// [x] Pancetta, prosciutto
+// [x] weiners
+// [x] Duck
+// [x] Roast beef
+// [x] meat balls
+// [should probably untrain this]veggie burgers is a frozen item
+// [x] liver
+// [x] kidney
+// [x] bison
 }
 
 var refrigerated_dictionary = {
@@ -807,7 +939,7 @@ var refrigerated_dictionary = {
 // Mozzarella
 // cheddar
 // feta
-// mexican blemd
+// [not sure i should train this]mexican blend
 // parmesan
 // reggiano
 // gouda
@@ -826,12 +958,12 @@ var refrigerated_dictionary = {
 // gorgonzola
 // asiago
 // Provolone  
-// Blue
-// Cottage Cheese
+// [not sure i should train this] Blue
+// [/] Cottage Cheese
 // Cream
 // Creamer
 // Eggnog, Nog
-// Sour Cream
+// [/] Sour Cream
 // Milk
 // Yogurt
 // Eggs
@@ -840,29 +972,29 @@ var refrigerated_dictionary = {
 // Lemonade
 // Water --> could be in dry good?
 // Half & Half
-// Pudding
+// [x] Pudding
 }
 
 // dictionary for seafood?
 var seafood_dictionary = {
- // Salmon
- // Shrimp
- // Scallops
- // Oysters
- // Clams
- // muscles
- // Crab
- // Lobster
- // Prawn
- // Herring
- // Trout
- // Fish
- // Tilapia
- // Catfish
- // Red Snapper
- // Halibut
- // sword fish
- // Cod
+ // [x] Salmon
+ // [x] Shrimp
+ // [x] Scallops
+ // [x] Oysters
+ // [x] Clams
+ // [x] muscles
+ // [x] Crab
+ // [x] Lobster
+ // [x] Prawn
+ // [x] Herring
+ // [x] Trout
+ // [x] Fish
+ // [x] Tilapia
+ // [x] Catfish
+ // [x] Red Snapper --> snapper
+ // [x] Halibut
+ // [x] sword fish
+ // [x] Cod
 }
 
 // frozen goods may be indicated by the use of "frozen" in product text
@@ -886,4 +1018,3 @@ var frozen_dictionary = {
 var dry_good_and_etc_dictionary = {
   // This will most likely be ect
 }
-

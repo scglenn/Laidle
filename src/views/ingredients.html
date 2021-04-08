@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="noScroll">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -33,7 +33,7 @@
       
     </style>
   </head>
-  <body>
+  <body class="noScroll">
 
     <div id="loading-wrapper">
       <div id="loading-text">LOADING</div>
@@ -42,9 +42,49 @@
     <div id="mainMenu">
       <form>
           <div class="form-group">
-              <label for="ingredientsDescription">Grocery List</Label>
-              <textarea class="form-control" id="ingredientsDescription" rows="10" placeholder="Shells & Beef"></textarea>
-          </div>
+              <!-- <label for="ingredientsDescription">Grocery List</Label> -->
+              <!-- <textarea class="form-control" id="ingredientsDescription" rows="10" placeholder="Veggetables"></textarea> -->
+              <div id="veggie_div">
+                <label>Vegetable List</label>
+                <textarea class="form-control" id="vegetable" rows="10" placeholder=""></textarea>
+              </div>
+              
+              <div id="fruit_div">
+                <label>Fruit List</label>
+                <textarea class="form-control" id="fruit" rows="10" placeholder=""></textarea>
+              </div>
+
+              <div id="meat_div">
+                <label>Meat List</label>
+                <textarea class="form-control" id="meat" rows="10" placeholder=""></textarea>
+              </div>
+
+              <div id="fridge_div">
+                <label>Fridge List</label>
+                <textarea class="form-control" id="fridge" rows="10" placeholder=""></textarea>
+              </div>
+
+              <div id="seafood_div">
+                <label>Seafood List</label>
+                <textarea class="form-control" id="seafood" rows="10" placeholder=""></textarea>
+              </div>
+
+              <div id="freezer_div">
+                <label>Freezer List</label>
+                <textarea class="form-control" id="freezer" rows="10" placeholder=""></textarea>
+              </div>
+
+              <div id="dry_goods_div">
+                <label>Dry Goods List</label>
+                <textarea class="form-control" id="dry goods" rows="10" placeholder=""></textarea>
+              </div>
+
+              <div id="etc_div">
+                <label>Etc List</label>
+                <textarea class="form-control" id="etc" rows="10" placeholder="Etc"></textarea>
+              </div>
+              
+            </div>
           <button id="back" type="button" class="btn btn-secondary">
               Back
           </button>
