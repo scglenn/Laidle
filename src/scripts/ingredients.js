@@ -107,7 +107,7 @@ async function GenerateRow(res)
         {
           current_entities_category = store_location; 
         }
-        else if (store_location == "freezer")
+        else if (store_location == "Freezer")
         {
           current_entities_category = store_location; 
         }
@@ -236,6 +236,7 @@ async function GenerateRow(res)
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
       dict["To Taste & Etc"] = {[res.text]: "" };
+      dict["To Taste & Etc"]["category"] = "etc";
       //dict[product]["category"] = current_entities_category;
     }
     else
@@ -345,6 +346,8 @@ async function fillList()
     
     console.log("What?");
     console.log(key);
+    console.log("category?");
+    console.log(dict[key]["category"]);
     // Insert product name into the grocery list text area
     current_text_area.value += key /*+ " : " + dict[key]["category"]*/ + "\n";
 

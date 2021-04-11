@@ -31,5 +31,5 @@
     "storage"
   ],
   "options_page": "src/views/options.html",
-  "content_security_policy": "script-src 'self' https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://stackpath.bootstrapcdn.com https://code.jquery.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.buymeacoffee.com https://www.buymeacoffee.com; object-src 'self'"
 }

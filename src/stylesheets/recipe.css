@@ -64,13 +64,13 @@ label
   background-color: #fff4b4;
   /* Added this attribute to allow formatting to be retained  */
   white-space: pre-wrap;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Comfortaa', cursive;
 }
 
 #recipeName
 {
   background-color: #fff4b4;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Comfortaa', cursive;
 }
 
 .fadeIn {
