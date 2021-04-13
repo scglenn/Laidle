@@ -62,7 +62,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 
 #notepad
 {
-  height: 80%;
+  height: 70%;
   width: 100%;
   background-image: url("/resources/notepad.jpg"); 
   border-radius: 2em;
@@ -148,11 +148,6 @@ h1 div
   margin-left: auto;
   margin-right: auto;
 }
-  
-.carousel-control-next,
-.carousel-control-prev /*, .carousel-indicators */ {
-    filter: invert(100%);
-}
 
 .flex-column
 {
@@ -163,4 +158,13 @@ h1 div
 .p-2
 {
   overflow-wrap: anywhere;
+  color: white;
+}
+
+#menuButtons
+{
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5em;
 }

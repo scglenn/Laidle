@@ -235,7 +235,7 @@ async function GenerateRow(res)
     if(!("To Taste & Etc" in dict))
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
-      dict["To Taste & Etc"] = {[res.text]: "" };
+      dict["To Taste & Etc"] = {[res.text]:  current_entities_category};
       dict["To Taste & Etc"]["category"] = "etc";
       //dict[product]["category"] = current_entities_category;
     }
@@ -350,6 +350,13 @@ async function fillList()
     console.log(dict[key]["category"]);
     // Insert product name into the grocery list text area
     current_text_area.value += key /*+ " : " + dict[key]["category"]*/ + "\n";
+
+    /* 
+    
+    I need to find a good strategy to put "to taste" with the correct category
+
+    */
+
 
     // Iterate through each measurement of the product
     Object.keys(dict[key]).forEach(function(second_key)
