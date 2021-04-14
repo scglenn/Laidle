@@ -69,16 +69,17 @@ chrome.storage.sync.get('number_of_recipes', function(data)
                 var temp = encodeURIComponent(data[temp_recipe_id_string].recipe_description);
 
                 // Params are used in url as a way to transfer data between pages
-                window.location.href="../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp /*data[temp_recipe_id_string].recipe_description*/+"&recipe_id="+temp_recipe_id_string+"";
-            
                 // Find the current html page in order to know which data needs to be saved.
-                var page = "../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp /*data[temp_recipe_id_string].recipe_description*/+"&recipe_id="+temp_recipe_id_string+"";//window.location.href;//"recipe.html";//path.split("/").pop();
+                var page = "../views/recipe.html?recipe_name="+data[temp_recipe_id_string].recipe_name+"&recipe_description="+temp +"&recipe_id="+temp_recipe_id_string+"";
                 
                 //Store the page that is going to be loaded after losing focus
                 chrome.storage.sync.set({page_on_load: page}, function()
                 {
                     console.log("page on load is " + page);
                 });
+
+                // Transition to the recipe page to edit recipe details
+                fadeOutDownAnimation(page);
             };
 
             //  This should remove the recipe data and reload recipe_list.html
