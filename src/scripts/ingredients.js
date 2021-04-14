@@ -236,13 +236,13 @@ async function GenerateRow(res)
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
       dict["To Taste & Etc"] = {[res.text]:  current_entities_category};
-      dict["To Taste & Etc"]["category"] = "etc";
+      //dict["To Taste & Etc"]["category"] = "etc";
       //dict[product]["category"] = current_entities_category;
     }
     else
     {
       // Add a new text entry to the existing "To Taste & Etc" key
-      (dict["To Taste & Etc"])[res.text] = "";
+      (dict["To Taste & Etc"])[res.text] = current_entities_category;
     }
   }
   else if(!(product in dict))
@@ -342,31 +342,50 @@ async function fillList()
   // Iterate through the dictionary of recipe information    
   Object.keys(dict).forEach(function(key) 
   {
-    let current_text_area = document.getElementById(dict[key]["category"]);
-    
-    console.log("What?");
-    console.log(key);
-    console.log("category?");
-    console.log(dict[key]["category"]);
-    // Insert product name into the grocery list text area
-    current_text_area.value += key /*+ " : " + dict[key]["category"]*/ + "\n";
+    // console.log("What?");
+    // console.log(key);
+    // console.log("category?");
+    // console.log(dict[key]["category"]);
 
     /* 
     
     I need to find a good strategy to put "to taste" with the correct category
 
+    The "To Taste & Etc" structure needs to be fixed because its really messy
+    Also "category" should be handled differently
     */
+    let current_text_area;
 
-
-    // Iterate through each measurement of the product
-    Object.keys(dict[key]).forEach(function(second_key)
+    if(key == "To Taste & Etc")
     {
-      if(second_key != "category")
+      Object.keys(dict[key]).forEach(function(second_key)
       {
-        // Insert number of measurements for the product
-        current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
-      }
-    });
+        current_text_area = document.getElementById((dict[key])[second_key]); 
+        console.log(key);
+        console.log(dict[key]) ;
+        console.log(second_key);
+        console.log((dict[key])[second_key]);
+        current_text_area.value += key + "\n";
+        current_text_area.value += "• " + second_key + "\n";
+
+      });
+    }
+    else
+    {
+      current_text_area = document.getElementById(dict[key]["category"]); 
+      
+      current_text_area.value += key + "\n";
+
+      // Iterate through each measurement of the product
+      Object.keys(dict[key]).forEach(function(second_key)
+      {
+        if(second_key != "category")
+        {
+          // Insert number of measurements for the product
+          current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
+        }
+      });
+    }
 
     // Move on to the next ingredient
     current_text_area.value += "\n";
