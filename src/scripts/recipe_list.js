@@ -50,8 +50,9 @@ chrome.storage.sync.get('number_of_recipes', function(data)
             // Used as a temporary variable to index the dictionary
             var temp_recipe_id_string = key;
 
+            let checkbox_fragment = "<div class='form-check'><input class='form-check-input' type='checkbox' value='' id='flexCheckChecked' checked=''><label class='form-check-label' for='flexCheckChecked'></label></div>";
             // Create p tag that has the recipes name + edit/remove buttons
-            var fragment = create("<p class='recipeRow'>" + data[temp_recipe_id_string].recipe_name + "<br><button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button><button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button></p>"); 
+            var fragment = create("<p class='recipeRow'>" + data[temp_recipe_id_string].recipe_name + "<br>" + checkbox_fragment +"<button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button><button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button></p>"); 
     
             // Insert the p tag into the document body
             document.getElementById('recipeList').insertBefore(fragment, document.getElementById('recipeList').childNodes[0]);
