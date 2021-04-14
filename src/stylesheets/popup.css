@@ -168,3 +168,15 @@ h1 div
   margin-right: auto;
   margin-top: 1.5em;
 }
+
+.party_parrot_text
+{
+  color: #f35626;
+  font-weight: 400;
+  background-image: linear-gradient( 92deg,#47c2be,#fff4b4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-animation: Hue 10s cubic-bezier(0.38, 0.72, 1, 1) infinite;
+}
+
+@keyframes Hue{0%{filter:hue-rotate(0deg)}to{filter:hue-rotate(-1turn)}};
