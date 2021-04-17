@@ -217,6 +217,8 @@ function saveChanges()
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
 
+    let recipe_is_included = true;
+
     // if the recipe id doesnt exist then 
     if(rec_id == "undefined")
     {
@@ -234,7 +236,7 @@ function saveChanges()
 
             // Save it using the Chrome extension storage API.
             //Variables cannot be used as keys without using computed keys, new in ES6.
-            chrome.storage.sync.set({[recipe_id_string] : {recipe_name,recipe_description}}, function(){});
+            chrome.storage.sync.set({[recipe_id_string] : {recipe_name,recipe_description,recipe_is_included}}, function(){});
 
             //Get the recipe id list and store the new recipe id to that list
             chrome.storage.sync.get('recipe_id_list',function(list)
@@ -248,6 +250,6 @@ function saveChanges()
     else
     {
         //Update existing recipe id with recipe name and/or recipe description changes
-        chrome.storage.sync.set({[rec_id] : {recipe_name,recipe_description}}, function() {});
+        chrome.storage.sync.set({[rec_id] : {recipe_name,recipe_description,recipe_is_included}}, function() {});
     }
 }

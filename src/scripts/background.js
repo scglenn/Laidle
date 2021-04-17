@@ -34,7 +34,8 @@ chrome.runtime.onInstalled.addListener(function()
         "12 mini flour tortillas, warmed\n"+
         "3/4 cup diced red onion\n"+
         "1/2 cup chopped fresh cilantro leaves\n"+
-        "1 lime, cut into wedges"
+        "1 lime, cut into wedges",
+      recipe_is_included: true
     }
   }, function(){console.log("created recipe 1");});
 

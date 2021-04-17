@@ -50,7 +50,16 @@ chrome.storage.sync.get('number_of_recipes', function(data)
             // Used as a temporary variable to index the dictionary
             var temp_recipe_id_string = key;
 
-            let checkbox_fragment = "<div class='form-check'><input class='form-check-input' type='checkbox' value='' id='flexCheckChecked' checked=''><label class='form-check-label' for='flexCheckChecked'></label></div>";
+            let checked = "";
+            let recipe_is_included = data[temp_recipe_id_string].recipe_is_included;
+            if(recipe_is_included)
+            {
+                checked = "checked";
+            }
+            
+            let recipe_name = data[temp_recipe_id_string].recipe_name;
+            let recipe_description = data[temp_recipe_id_string].recipe_description
+            let checkbox_fragment = "<div class='form-check'><input class='form-check-input' type='checkbox' value='' id='checkbox_" + temp_recipe_id_string +"' "+checked+"><label class='form-check-label' for='flexCheckChecked'></label></div>";
             let edit_btn_fragment = "<button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button>";
             let remove_btn_fragment = "<button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button>";
             let recipe_row_fragement = "<p>" + data[temp_recipe_id_string].recipe_name + "</p><div class='d-flex flex-row'><div class='p-2 p-2-check'>" + checkbox_fragment + "</div><div class='p-2 p-2-button'>" + edit_btn_fragment + "</div><div class='p-2 p-2-button'>" + remove_btn_fragment + "</div></div>";
@@ -64,6 +73,18 @@ chrome.storage.sync.get('number_of_recipes', function(data)
 
             // Access the remove button
             var remove_btn = document.getElementById('remove'+'_'+temp_recipe_id_string);
+
+            var checkbox_btn = document.getElementById('checkbox'+'_'+temp_recipe_id_string); 
+
+            checkbox_btn.onclick = function(element)
+            {
+                console.log("checkbox clicked!");
+                recipe_is_included = !recipe_is_included;
+                console.log(recipe_name)
+                console.log(recipe_description);
+                console.log(recipe_is_included);
+                chrome.storage.sync.set({[temp_recipe_id_string] : {recipe_name,recipe_description,recipe_is_included}}, function(){});
+            };
 
             //  This should fill the recipe page and send the user to recipe.html
             edit_btn.onclick = function(element) 

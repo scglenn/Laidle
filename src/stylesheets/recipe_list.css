@@ -94,6 +94,11 @@ body
 {
   text-align: center;
   margin: 1em;
+  padding: 1rem;
+  border-radius: 26px;
+  background: #fdf2b4;
+  box-shadow:  7px 7px 43px #cdc492,
+               -7px -7px 43px #ffffd6;    
 }
 
 .fadeIn {

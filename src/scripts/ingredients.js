@@ -425,11 +425,14 @@ awaitForRecipeIDList().then(data=>
     // Iterate through each recipe
     Object.keys(data).forEach(key => 
     {
-      // Parse each ingredient by the return character
-      var each_ingredient = data[key].recipe_description.split('\n');
+      if(data[key].recipe_is_included)
+      {
+        // Parse each ingredient by the return character
+        var each_ingredient = data[key].recipe_description.split('\n');
 
-      // Execute fetch requests to WIT API for each ingredient in each recipe
-      awaitForWITReponse(each_ingredient).then(data=>{});
+        // Execute fetch requests to WIT API for each ingredient in each recipe
+        awaitForWITReponse(each_ingredient).then(data=>{});
+      }
     });
   });
 });
