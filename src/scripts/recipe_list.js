@@ -51,9 +51,11 @@ chrome.storage.sync.get('number_of_recipes', function(data)
             var temp_recipe_id_string = key;
 
             let checkbox_fragment = "<div class='form-check'><input class='form-check-input' type='checkbox' value='' id='flexCheckChecked' checked=''><label class='form-check-label' for='flexCheckChecked'></label></div>";
-            // Create p tag that has the recipes name + edit/remove buttons
-            var fragment = create("<p class='recipeRow'>" + data[temp_recipe_id_string].recipe_name + "<br>" + checkbox_fragment +"<button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button><button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button></p>"); 
-    
+            let edit_btn_fragment = "<button class='editButton btn btn-primary btn-lg' id='edit"+'_'+temp_recipe_id_string+"' type='button'>Edit</button>";
+            let remove_btn_fragment = "<button class='removeButton btn btn-secondary btn-lg' id='remove"+'_'+temp_recipe_id_string+"' type='button'>Remove</button>";
+            let recipe_row_fragement = "<p>" + data[temp_recipe_id_string].recipe_name + "</p><div class='d-flex flex-row'><div class='p-2 p-2-check'>" + checkbox_fragment + "</div><div class='p-2 p-2-button'>" + edit_btn_fragment + "</div><div class='p-2 p-2-button'>" + remove_btn_fragment + "</div></div>";
+            var fragment = create("<div class='recipeRow'>"+recipe_row_fragement+ "</div>"); 
+            
             // Insert the p tag into the document body
             document.getElementById('recipeList').insertBefore(fragment, document.getElementById('recipeList').childNodes[0]);
 
