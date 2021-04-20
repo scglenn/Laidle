@@ -84,6 +84,7 @@ chrome.storage.sync.get('number_of_recipes', function(data)
                 console.log(recipe_description);
                 console.log(recipe_is_included);
                 chrome.storage.sync.set({[temp_recipe_id_string] : {recipe_name,recipe_description,recipe_is_included}}, function(){});
+                chrome.storage.sync.set({retain_grocery_list: false}, function(){});
             };
 
             //  This should fill the recipe page and send the user to recipe.html

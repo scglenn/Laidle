@@ -252,4 +252,6 @@ function saveChanges()
         //Update existing recipe id with recipe name and/or recipe description changes
         chrome.storage.sync.set({[rec_id] : {recipe_name,recipe_description,recipe_is_included}}, function() {});
     }
+
+    chrome.storage.sync.set({retain_grocery_list: false}, function(){});
 }
