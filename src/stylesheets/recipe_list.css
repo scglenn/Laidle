@@ -10,6 +10,10 @@ body
     height: 100%;
 }
 
+body.shake {
+  animation: shake 1s infinite;
+}
+
 #mainMenu
 {
   background-color: #343e56;
@@ -211,4 +215,54 @@ input[type=checkbox]
 .p-2-button
 {
   width: 100%;
+}
+
+.fade-scale {
+  transform: scale(0);
+  opacity: 0;
+  -webkit-transition: all .25s linear;
+  -o-transition: all .25s linear;
+  transition: all .25s linear;
+}
+
+.fade-scale.in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fade {
+  position: absolute;
+  transition-duration: 0.125s;
+  top: 2em;
+  z-index: 10;
+  left: 5%;
+  right: 5%;
+  width: auto;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(0.5em);
+  }
+  40% {
+    transform: translate(-0.5em);
+  }
+  60% {
+    transform: translate(0.5em);
+  }
+  80% {
+    transform: translate(-0.5em);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.alert
+{
+  position: fixed;
+  text-align: center;
 }

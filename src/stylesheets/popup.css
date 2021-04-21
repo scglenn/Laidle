@@ -4,6 +4,10 @@ body
   border-radius: 2em;
 }
 
+body.shake {
+  animation: shake 1s infinite;
+}
+
 html, body {margin: 0; height: 100%; overflow: hidden}
 
 #mainMenu
@@ -180,3 +184,53 @@ h1 div
 }
 
 @keyframes Hue{0%{filter:hue-rotate(0deg)}to{filter:hue-rotate(-1turn)}};
+
+.fade-scale {
+  transform: scale(0);
+  opacity: 0;
+  -webkit-transition: all .25s linear;
+  -o-transition: all .25s linear;
+  transition: all .25s linear;
+}
+
+.fade-scale.in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fade {
+  position: absolute;
+  transition-duration: 0.125s;
+  top: 2em;
+  z-index: 10;
+  left: 5%;
+  right: 5%;
+  width: auto;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(0.5em);
+  }
+  40% {
+    transform: translate(-0.5em);
+  }
+  60% {
+    transform: translate(0.5em);
+  }
+  80% {
+    transform: translate(-0.5em);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.alert
+{
+  position: absolute;
+  text-align: center;
+}

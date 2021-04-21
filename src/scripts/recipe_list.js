@@ -10,7 +10,7 @@
 */
 
 // Import the page animations that get used between page transitions
-import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
+import {alert,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
 // Grab the number of recipes in local storage
 chrome.storage.sync.get('number_of_recipes', function(data)
@@ -143,7 +143,24 @@ var back_btn = document.getElementById('back');
 //  This should send the user to a blank recipe.html
 add_btn.onclick = function(element) 
 {
-    fadeOutDownAnimation("../views/recipe.html?recipe_name="+""+"&recipe_description="+""+"&recipe_id="+undefined+"");
+    // Get the recipe id list to check the number of recipes in storage
+  chrome.storage.sync.get('recipe_id_list',function(list)
+  {
+    //Check if local storage is filled to recipe limit
+    //Problems: 
+    // 1). 11 of them were created, so i need to figure out whats going on there
+    // 2). I need the alert to appear on the UI wherever the use is instead of the top of the body
+    if(list.recipe_id_list.length <= 10)
+    {
+        fadeOutDownAnimation("../views/recipe.html?recipe_name="+""+"&recipe_description="+""+"&recipe_id="+undefined+"");
+    }
+    else
+    {
+      //Alert if no recipes exist
+      alert('Error!', "Recipe Limit Reached. Donate To Support Additional Updates!",'alert-danger');
+    }
+  });
+    
 };
 
 // This should send the user to the default popup page

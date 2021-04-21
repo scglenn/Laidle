@@ -10,7 +10,7 @@
 */
 
 // Import the page animations that get used between page transitions
-import {fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
+import {alert,fadeOutDownAnimation,initializeAnimation} from './page_transitions.js';
 
 // Grab the html page that was loaded last
 // This functionality helps retain the users last actions
@@ -54,7 +54,23 @@ var show_recipes_btn = document.getElementById('showRecipes');
 // Transition extension page to ingredients view
 show_ingredients_btn.onclick = function(element)
 {
-  fadeOutDownAnimation("../views/ingredients.html");
+  // Get the recipe id list to check the number of recipes in storage
+  chrome.storage.sync.get('recipe_id_list',function(list)
+  {
+    //Check if there are any recipes in local storage
+    //Problem:
+    // 1). I need to check if all recipes have been deselected
+    //     a) Allowing this case to happen is better than not allowing user to deselect everything.
+    if(list.recipe_id_list.length > 0)
+    {
+      fadeOutDownAnimation("../views/ingredients.html");
+    }
+    else
+    {
+      //Alert if no recipes exist
+      alert('Error!', "No Recipes Selected",'alert-danger');
+    }
+  });
 };
 
 // Transition extension page to the recipe list view

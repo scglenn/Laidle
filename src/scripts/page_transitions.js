@@ -85,5 +85,48 @@ function disableScroll()
   html.setAttribute("class","noScroll");    
 }
 
+// Keeps track of whether an alert is currently displayed
+// Used to prevent the user from triggering the same alert multiple times in a row
+var alert_status = false;
+
+// Used to trigger an alert on the page
+function alert(title, text, type)
+{
+    // If an alert isnt already displayed
+    if(alert_status == false)
+    {
+        // Generated Alert HTML
+        var alert_html = $("<div class='alert alert-dismissible " + type + "'><strong>" + title + "</strong><br> " + text + "<a href='#' class='close float-close' data-dismiss='alert' aria-label='close'>×</a></div>");
+
+        // On alert close, reset status of alert_on
+        alert_html.on('close.bs.alert', function () 
+        {
+          alert_status = false;
+        });
+        // setTimeout with 0 millisecond delay adds the call back to the queue 
+        // This allows for the show & fade classes to animate the alert popup properly
+        setTimeout(function() 
+        {
+            // Add the generated alert html to the top of recipe.html
+            $('body').prepend(alert_html);
+
+            // Alert popup appears and fades in
+            alert_html.addClass('show fade');
+
+            // Page shakes to indicate a rejected action
+            $('body').addClass('shake');
+
+            // After 1 second, stop the page from shaking back and forth
+            setTimeout(function()
+            {
+                $('body').removeClass('shake');
+            }, 1000);
+        },0);
+
+        // Set to true, to indicate the the alert is displayed
+        alert_status = true;
+    }
+};
+
 // Exporting these functions to be used in other .js files
-export {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation};
+export {alert,fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation};
