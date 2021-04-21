@@ -74,20 +74,24 @@ chrome.storage.sync.get('number_of_recipes', function(data)
             // Access the remove button
             var remove_btn = document.getElementById('remove'+'_'+temp_recipe_id_string);
 
+            // Access the check box
             var checkbox_btn = document.getElementById('checkbox'+'_'+temp_recipe_id_string); 
 
+            // 
             checkbox_btn.onclick = function(element)
             {
-                console.log("checkbox clicked!");
+                // Not sure this logic makes sense
+                //
                 recipe_is_included = !recipe_is_included;
-                console.log(recipe_name)
-                console.log(recipe_description);
-                console.log(recipe_is_included);
+
+                // 
                 chrome.storage.sync.set({[temp_recipe_id_string] : {recipe_name,recipe_description,recipe_is_included}}, function(){});
+                
+                // Set retain grocery list to false so that the grocery list will be regenerated with WIT requests rather than pulled from memory
                 chrome.storage.sync.set({retain_grocery_list: false}, function(){});
             };
 
-            //  This should fill the recipe page and send the user to recipe.html
+            // This should fill the recipe page and send the user to recipe.html
             edit_btn.onclick = function(element) 
             {
                 // This ensures that return characters are retained in the string when passed via URL

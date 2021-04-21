@@ -54,14 +54,6 @@ chrome.runtime.onInstalled.addListener(function()
   //Initialize recipe description storage variable
   chrome.storage.sync.set({recipe_description: undefined}, function(){});
 
-  //What strategy should i use to retain the grocery list?
-  // 1. How to store the text for each category 
-  //    a) Store object for each category
-  //    b) Store a single object that contains each category 
-  // 2. How to load retained grocery list?
-  //    a) Use the current method by passing data via url params
-  //    b) Pull the data from storage on load
-  //       Q: Would this cause any problems with how the extension loses focus?
-
+  //Initialize retain grocery list so that the grocery list will always be generated with WIT requested on startup
   chrome.storage.sync.set({retain_grocery_list: false}, function(){});
 });
