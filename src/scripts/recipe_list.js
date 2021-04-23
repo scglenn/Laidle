@@ -145,6 +145,9 @@ chrome.storage.sync.get('number_of_recipes', function(data)
                 });
             };
         });
+
+        chrome.storage.sync.set({'qty_of_checked_boxes': qty_of_checked_boxes}, function(){});
+        
     });
   });
 });

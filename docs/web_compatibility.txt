@@ -1,0 +1,6 @@
+The purpose of this doc is to keep track of which recipe related websites
+are incompatible with the current copy/paste ingredients system.
+
+website: https://www.bonappetit.com/
+description: A grid is used to split qty of product and the rest of the strings
+
