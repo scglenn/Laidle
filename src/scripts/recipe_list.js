@@ -12,6 +12,8 @@
 // Import the page animations that get used between page transitions
 import {alert,fadeOutDownAnimation,initializeAnimation } from './page_transitions.js';
 
+var qty_of_checked_boxes = 0; 
+
 // Grab the number of recipes in local storage
 chrome.storage.sync.get('number_of_recipes', function(data)
 {
@@ -55,6 +57,7 @@ chrome.storage.sync.get('number_of_recipes', function(data)
             if(recipe_is_included)
             {
                 checked = "checked";
+                qty_of_checked_boxes++;
             }
             
             let recipe_name = data[temp_recipe_id_string].recipe_name;
@@ -83,6 +86,18 @@ chrome.storage.sync.get('number_of_recipes', function(data)
                 // Not sure this logic makes sense
                 //
                 recipe_is_included = !recipe_is_included;
+
+                if(recipe_is_included)
+                {
+                    qty_of_checked_boxes++;
+                }
+                else
+                {
+                    qty_of_checked_boxes--;
+                }
+                
+                // There is probably a more efficient way to pass around this data but this works for now
+                chrome.storage.sync.set({'qty_of_checked_boxes': qty_of_checked_boxes}, function(){});
 
                 // 
                 chrome.storage.sync.set({[temp_recipe_id_string] : {recipe_name,recipe_description,recipe_is_included}}, function(){});
@@ -140,6 +155,10 @@ var add_btn = document.getElementById('add');
 // Access the back button
 var back_btn = document.getElementById('back');
 
+chrome.storage.sync.get('recipe_id_list',function(list)
+  {
+      console.log(list.recipe_id_list);
+  });
 //  This should send the user to a blank recipe.html
 add_btn.onclick = function(element) 
 {
@@ -150,7 +169,7 @@ add_btn.onclick = function(element)
     //Problems: 
     // 1). 11 of them were created, so i need to figure out whats going on there
     // 2). I need the alert to appear on the UI wherever the use is instead of the top of the body
-    if(list.recipe_id_list.length <= 10)
+    if(list.recipe_id_list.length < 10)
     {
         fadeOutDownAnimation("../views/recipe.html?recipe_name="+""+"&recipe_description="+""+"&recipe_id="+undefined+"");
     }

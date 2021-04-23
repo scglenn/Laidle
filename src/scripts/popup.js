@@ -57,19 +57,25 @@ show_ingredients_btn.onclick = function(element)
   // Get the recipe id list to check the number of recipes in storage
   chrome.storage.sync.get('recipe_id_list',function(list)
   {
-    //Check if there are any recipes in local storage
-    //Problem:
-    // 1). I need to check if all recipes have been deselected
-    //     a) Allowing this case to happen is better than not allowing user to deselect everything.
-    if(list.recipe_id_list.length > 0)
+    // Question: Can i combined these get commands?
+    chrome.storage.sync.get('qty_of_checked_boxes' , function(data) 
     {
-      fadeOutDownAnimation("../views/ingredients.html");
-    }
-    else
-    {
-      //Alert if no recipes exist
-      alert('Error!', "No Recipes Selected",'alert-danger');
-    }
+      //Check if there are any recipes in local storage
+      if(list.recipe_id_list.length == 0)
+      {
+        //Alert if no recipes exist
+        alert('Error!', "No Recipes Saved",'alert-danger');
+      }
+      else if(data.qty_of_checked_boxes == 0)
+      {
+        //Alert if no recipes are selected
+        alert('Error!', "No Recipes Selected",'alert-danger');
+      }
+      else
+      {
+        fadeOutDownAnimation("../views/ingredients.html");
+      }
+    });
   });
 };
 
