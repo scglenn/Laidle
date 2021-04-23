@@ -16,6 +16,53 @@ import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './pag
 //This dictionary holds all the information received from wit.ai
 var dict = {};
 
+// List of category objects
+// a) Text area displays the ingredients 
+// b) Div element surrounding the section
+// c) Key to get/set category in memory
+var category_sections = {
+  vegetable: {
+    text_area_element: document.getElementById('vegetable'),
+    div_element: document.getElementById('veggie_div'),
+    storage_string: 'vegetable_list'
+  },
+  fruit: {
+    text_area_element: document.getElementById('fruit'),
+    div_element: document.getElementById('fruit_div'),
+    storage_string: 'fruit_list'
+  },
+  meat: {
+    text_area_element: document.getElementById('meat'),
+    div_element: document.getElementById('meat_div'),
+    storage_string: 'meat_list'
+  },
+  fridge: {
+    text_area_element: document.getElementById('fridge'),
+    div_element: document.getElementById('fridge_div'),
+    storage_string: 'fridge_list'
+  },
+  seafood: {
+    text_area_element: document.getElementById('seafood'),
+    div_element: document.getElementById('seafood_div'),
+    storage_string: 'seafood_list'
+  },
+  freezer: {
+    text_area_element: document.getElementById('freezer'),
+    div_element: document.getElementById('freezer_div'),
+    storage_string: 'freezer_list'
+  },
+  dry_goods : {
+    text_area_element: document.getElementById('dry goods'),
+    div_element: document.getElementById('dry_goods_div'),
+    storage_string: 'dry_list'
+  },
+  etc: {
+    text_area_element: document.getElementById('etc'),
+    div_element: document.getElementById('etc_div'),
+    storage_string: 'etc_list'
+  }
+}
+
 // This is the second parsing phase of the wit.ai request.
 // Once wit has sent its parse of the ingredient we can make educated decisions on how to categorize data.
 // This function will create add or update something in the dictionary
@@ -265,19 +312,6 @@ async function GenerateRow(res)
   }
 };
 
-// Text area displays the ingredients 
-//var text_area = document.getElementById('ingredientsDescription');
-var vegetable_list = document.getElementById('vegetable');
-var fruit_list = document.getElementById('fruit');
-var meat_list = document.getElementById('meat');
-var fridge_list = document.getElementById('fridge');
-var seafood_list = document.getElementById('seafood');
-var freezer_list = document.getElementById('freezer');
-var dry_list = document.getElementById('dry goods');
-var etc_list = document.getElementById('etc');
-
-var grocery_list = [vegetable_list,fruit_list,meat_list,fridge_list,seafood_list,freezer_list,dry_list,etc_list];
-var storage_strings = ['vegetable_list','fruit_list','meat_list','fridge_list','seafood_list','freezer_list','dry_list','etc_list'];
 // Back button to go back
 var back_btn = document.getElementById('back');
 
@@ -311,9 +345,6 @@ async function awaitForRecipeList(recipe_list)
     chrome.storage.sync.get(recipe_list , function(data) {resolve(data); });
   });
 }
-
-// Listener for content script message or backgorund script message
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {});
 
 // Writes the ingredient list to the text area
 async function fillList()
@@ -368,28 +399,24 @@ async function fillList()
   });
 };
 
-
 chrome.storage.sync.get('retain_grocery_list' , function(data) 
 {
   if(data.retain_grocery_list == true)
   {
-    storage_strings.forEach(category=> 
+    Object.keys(category_sections).forEach(category=> 
     {
-      chrome.storage.sync.get(category, function(list_data){
-        grocery_list[storage_strings.indexOf(category)].value = list_data[Object.keys(list_data)[0]];
+      // Not sure if storage_string needs []
+      chrome.storage.sync.get(category_sections[category].storage_string, function(list_data){
+        
+        category_sections[category].text_area_element.value = list_data[Object.keys(list_data)[0]];
+        if(category_sections[category].text_area_element.value == "")
+        {
+          category_sections[category].div_element.remove();
+        }
       });
     });
-
-    initializeAnimation();
-    
-    // Make menu visible
-    document.getElementById('mainMenu').style.visibility = "visible";
-
-    // Make loading div hidden
-    document.getElementById('loading-wrapper').style.visibility = "hidden";
-
-    // Once text area has data written to it, allow the page to fade in and hide the loading gif
-    fadeInUpAnimation();
+   
+    transitionLoadingAnimation();
   }
   else
   {
@@ -410,18 +437,6 @@ async function executeGroceryListGeneration()
     {
       var recipePromises =[];
     
-      //  _                     _       _     _ 
-      // | |                   | |     (_)   | |
-      // | |__   __ _ _ __   __| | __ _ _  __| |
-      // | '_ \ / _` | '_ \ / _` |/ _` | |/ _` |
-      // | |_) | (_| | | | | (_| | (_| | | (_| |
-      // |_.__/ \__,_|_| |_|\__,_|\__,_|_|\__,_|
-
-      // Description: 
-      // This functionality writes to the text area multiple times.
-      // Currently it is not efficient. A new promise structure
-      // needs to be configured in order to write to text area
-      // only once.
       // Iterate through each recipe 
       Object.keys(data).forEach(key => 
       {
@@ -431,97 +446,35 @@ async function executeGroceryListGeneration()
           var each_ingredient = data[key].recipe_description.split('\n');
 
           // Execute fetch requests to WIT API for each ingredient in each recipe
-          // awaitForWITReponse(each_ingredient).then(data=>{
-          // });
-          //awaitForWITReponse(each_ingredient);
           recipePromises.push(awaitForWITReponse(each_ingredient));
         }
       });
-
       
       Promise.all(recipePromises).then(function (responses) 
       {
         // Get a JSON object from each of the responses
         return Promise.all(responses.map(function (response) { 
-          //dict = response;
-          //console.log(response);
           return response;
         }));
       })
       .then(()=>{
-          
-        console.log("This should be last and run once");
 
-        vegetable_list.value = "";
-        fruit_list.value = "";
-        meat_list.value = "";
-        fridge_list.value = "";
-        seafood_list.value = "";
-        freezer_list.value = "";
-        dry_list.value = "";
-        etc_list.value = "";
-        fillList().then(idk=>{
+        fillList();
+        
+        Object.keys(category_sections).forEach(category=> 
+        {
+          if(category_sections[category].text_area_element.value == "")
+          {
+            category_sections[category].div_element.remove();
+          }
+
+          chrome.storage.sync.set({[category_sections[category].storage_string]: category_sections[category].text_area_element.value}, function(){});
           
         });
-        
-        grocery_list.forEach(category=> 
-          {
-            let test = storage_strings[grocery_list.indexOf(category)];
-            
-            chrome.storage.sync.set({[test]: category.value}, function(){});
-          });
-    
-          chrome.storage.sync.set({retain_grocery_list: true}, function(){});
-        
-        if(vegetable_list.value == "")
-        {
-          document.getElementById('veggie_div').remove();
-        }
-    
-        if(fruit_list.value == "")
-        {
-          document.getElementById('fruit_div').remove();
-        }
-    
-        if(meat_list.value == "")
-        {
-          document.getElementById('meat_div').remove();
-        }
-    
-        if(fridge_list.value == "")
-        {
-          document.getElementById('fridge_div').remove();
-        }
+  
+        chrome.storage.sync.set({retain_grocery_list: true}, function(){});
 
-        if(etc_list.value == "")
-        {
-          document.getElementById('etc_div').remove();
-        }
-    
-        if(seafood_list.value == "")
-        {
-          document.getElementById('seafood_div').remove();
-        }
-    
-        if(freezer_list.value == "")
-        {
-          document.getElementById('freezer_div').remove();
-        }
-
-        if(dry_list.value == "")
-        {
-          document.getElementById('dry_goods_div').remove();
-        }
-
-        initializeAnimation();
-        // Make menu visible
-        document.getElementById('mainMenu').style.visibility = "visible";
-    
-        // Make loading div hidden
-        document.getElementById('loading-wrapper').style.visibility = "hidden";
-    
-        // Once text area has data written to it, allow the page to fade in and hide the loading gif
-        fadeInUpAnimation();
+        transitionLoadingAnimation();
       
         }
       );
@@ -530,6 +483,18 @@ async function executeGroceryListGeneration()
 
   
 };
+
+function transitionLoadingAnimation()
+{
+    // Make menu visible
+    document.getElementById('mainMenu').style.visibility = "visible";
+
+    // Make loading div hidden
+    document.getElementById('loading-wrapper').style.visibility = "hidden";
+
+    // Once text area has data written to it, allow the page to fade in and hide the loading gif
+    fadeInUpAnimation();
+}
 
 // Executes multiple fetch requests to the WIT API
 // This is via an async function to wait for all requests to be complete
