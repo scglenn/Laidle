@@ -44,11 +44,21 @@ add_btn.onclick = function(element)
 
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
-    
+
     if (!recipe_description || !recipe_name)
     {
         // Blank recipe description and recipe name trigger an alert
         alert('Error!', "Empty Fields",'alert-danger');
+    }
+    else if(recipe_name.length > 50)
+    {
+        // Alert the user that the recipe name is too long
+        alert('Error!', "Recipe Name Over 50 Characters",'alert-danger');
+    }
+    else if(recipe_description.length > 1000)
+    {
+        // Alert the user that the recipe description is too long
+        alert('Error!', "Recipe Description Over 1000 Characters",'alert-danger');
     }
     else if(prohibited_strings != null)
     {
@@ -125,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function ()
         text_area = document.getElementById('recipeDescription');
 
         // Recipe description text
-        var rec_desc = text_area.value;
+        var rec_desc = encodeURIComponent(text_area.value);
 
         // Generate the page URL to be saved
         var page = "../views/recipe.html?recipe_name="+rec_title+"&recipe_description="+rec_desc+"&recipe_id="+rec_id+"";
