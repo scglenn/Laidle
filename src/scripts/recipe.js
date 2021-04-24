@@ -35,12 +35,21 @@ add_btn.onclick = function(element)
     // This regex finds "+" and "-"
     // New strategies may be implemented at a later date to handle these cases
     const prohibited_regex = /\+|-/gi;
+
+    const numbers_only_regex = /^[0-9]*$/gm;
+
+    const empty_lines_regex = /^[ \t\n]*$/gm;
     
     // Grab the latest text area value
     var recipe_description = text_area.value;
 
     // Find prohibited strings in the recipe description
     var prohibited_strings = recipe_description.match(prohibited_regex);
+
+    var numbers_only = recipe_description.match(numbers_only_regex);
+
+    // Not including this case yet, its totally needed for now
+    //var empty_lines = recipe_description.match(empty_lines_regex);
 
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
@@ -64,6 +73,11 @@ add_btn.onclick = function(element)
     {
         // Prohibited strings trigger an alert
         alert('Error!', "Prohibited text: '+' '-' ", 'alert-danger');
+    }
+    else if(numbers_only != null)
+    {
+        //
+        alert('Format Error!', "Lines containing only numbers", 'alert-danger');
     }
     else
     {
