@@ -35,7 +35,7 @@ html, body {margin: 0; height: 100%; overflow: hidden}
 
 #showIngredients:hover 
 {
-  background-color: #343e56;
+  background-color: #fff4b4;
   border-color: #47c2be;
   color: #47c2be;
 }
