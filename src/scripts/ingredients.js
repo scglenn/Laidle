@@ -126,39 +126,48 @@ async function GenerateRow(res)
       // For now the first entity is what is going to determine the category
       // Assuming this will change eventually
 
-      if(res.entities[key][0].entities[0] != null)
+      let product_entities = res.entities[key][0].entities;
+      // TODO: Instead of grabbing the first entity under the product we should loop through all of them under the product
+      // Example: Persian cucumbers, arugula, tomatoes, and basil, for serving
+      // This example case has notes and veggies in it
+      if(product_entities[0] != null)
       {
-        let store_location = res.entities[key][0].entities[0].name;
-        
-        // Check if the current measurement indicates a "Dry Goods" Item
-        if( store_location == "vegetable")
+        product_entities.forEach(function(product_entity)
         {
-          current_entities_category = store_location; 
-        }
-        else if (store_location == "fruit")
-        {
-          current_entities_category = store_location; 
-        }
-        else if(store_location == "meat")
-        {
-          current_entities_category = store_location; 
-        }
-        else if (store_location == "fridge")
-        {
-          current_entities_category = store_location; 
-        }
-        else if (store_location == "seafood")
-        {
-          current_entities_category = store_location; 
-        }
-        else if (store_location == "Freezer")
-        {
-          current_entities_category = store_location; 
-        }
-        else
-        {
-          current_entities_category = "etc";
-        }
+          if(product_entity.name != "note")
+          {
+            // Todo: Make a dictionary of the entities instead of having a large if else structure
+            // Todo: Strategy should be created to determine how to categorize multiple entities under one product
+            if( product_entity.name == "vegetable")
+            {
+              current_entities_category = product_entity.name; 
+            }
+            else if (product_entity.name == "fruit")
+            {
+              current_entities_category = product_entity.name; 
+            }
+            else if(product_entity.name == "meat")
+            {
+              current_entities_category = product_entity.name; 
+            }
+            else if (product_entity.name == "fridge")
+            {
+              current_entities_category = product_entity.name; 
+            }
+            else if (product_entity.name == "seafood")
+            {
+              current_entities_category = product_entity.name; 
+            }
+            else if (product_entity.name == "Freezer")
+            {
+              current_entities_category = product_entity.name; 
+            }
+            else
+            {
+              current_entities_category = "etc";
+            }
+          }
+        });
 
         if(res.entities['measurement:measurement'] != null)
         {
@@ -208,14 +217,23 @@ async function GenerateRow(res)
     {
       var note = entity_value;
     }
-    else 
+    else if(entity_name == "wit$number" || entity_name == "amount")
     {
       //  Note:
-      //  This else case catches any other entities. Mostly just wit$number and amount. Only numbers for now.
+      //  This case catches any other entities. Mostly just wit$number and amount. Only numbers for now.
       amount_found = true;
       amount = entity_value;
     }
+    else
+    {
+      // Items that fall into that case would be if a vegetable,fruit,meat, etc has been found by wit but not under a "product"
+      // To Do: Strategy needs to be developed for how cases like these will be handled
+    }
   });
+
+  //Debugging purposes: 
+  //  Output WIT.ai results.
+  console.log(res.entities);
 
   // This large code block is mainly used for special edge cases
   // Logic is needed to see if quantity and amount were found in query
@@ -293,6 +311,9 @@ async function GenerateRow(res)
   {
     // Add product to dictionary with the measurement and amount if its not in the dictionary
     dict[product] = {[measurement] : numericQuantity(amount)};
+    console.log("numericQuantity(amount)");
+    console.log(amount);
+    console.log(numericQuantity(amount));
     dict[product]["category"] = current_entities_category;
   }
   else
@@ -310,6 +331,8 @@ async function GenerateRow(res)
       (dict[product])[measurement] = numericQuantity(amount);
     }
   }
+
+
 };
 
 // Back button to go back
@@ -396,6 +419,8 @@ async function fillList()
     // Move on to the next ingredient
     current_text_area.value += "\n";
 
+
+    console.log(current_text_area.value);
   });
 };
 
