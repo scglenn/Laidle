@@ -125,49 +125,67 @@ async function GenerateRow(res)
 
       // For now the first entity is what is going to determine the category
       // Assuming this will change eventually
-
       let product_entities = res.entities[key][0].entities;
-      // TODO: Instead of grabbing the first entity under the product we should loop through all of them under the product
-      // Example: Persian cucumbers, arugula, tomatoes, and basil, for serving
-      // This example case has notes and veggies in it
+
       if(product_entities[0] != null)
       {
+        let entity_name =  "";
+
+        let same_categories = true;
+
+        // Example: Persian cucumbers, arugula, tomatoes, and basil, for serving
+        // This example case has notes and veggies in it
         product_entities.forEach(function(product_entity)
         {
           if(product_entity.name != "note")
           {
             // Todo: Make a dictionary of the entities instead of having a large if else structure
             // Todo: Strategy should be created to determine how to categorize multiple entities under one product
-            if( product_entity.name == "vegetable")
+            if(product_entity.name != entity_name && entity_name != "")
             {
-              current_entities_category = product_entity.name; 
+              same_categories = false;
+            }
+            else if( product_entity.name == "vegetable")
+            {
+              entity_name = product_entity.name; 
             }
             else if (product_entity.name == "fruit")
             {
-              current_entities_category = product_entity.name; 
+              entity_name = product_entity.name; 
             }
             else if(product_entity.name == "meat")
             {
-              current_entities_category = product_entity.name; 
+              entity_name = product_entity.name; 
             }
             else if (product_entity.name == "fridge")
             {
-              current_entities_category = product_entity.name; 
+              entity_name = product_entity.name; 
             }
             else if (product_entity.name == "seafood")
             {
-              current_entities_category = product_entity.name; 
+              entity_name = product_entity.name; 
             }
             else if (product_entity.name == "Freezer")
             {
-              current_entities_category = product_entity.name; 
+              entity_name = product_entity.name; 
             }
             else
             {
-              current_entities_category = "etc";
+              entity_name = "etc";
             }
           }
         });
+
+        // This case will categorize a product into the "etc" category if it has multiple sub-entities of different categories
+        // For now this is a bandaid until a more sophisticated strategy is developed to handle this edge case
+        if(same_categories == false)
+        {
+          current_entities_category = "etc";
+        }
+        else
+        {
+          current_entities_category = entity_name;
+        }
 
         if(res.entities['measurement:measurement'] != null)
         {
