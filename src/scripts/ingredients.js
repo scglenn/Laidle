@@ -75,7 +75,7 @@ async function GenerateRow(res)
   }
 
   // The name of an ingredient in the recipe
-  var product = undefined;
+  var product = "Unknown Product";
 
   // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
   // Example: 1 tomato is just a whole tomato.
@@ -103,7 +103,7 @@ async function GenerateRow(res)
   // This keeps track of whether wit found a "quanitity" entity.
   var quantity_found = false;
 
-  var current_entities_category =  "Etc";
+  var current_entities_category =  "etc";
   
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
@@ -133,8 +133,10 @@ async function GenerateRow(res)
 
         let same_categories = true;
 
+
         // Example: Persian cucumbers, arugula, tomatoes, and basil, for serving
         // This example case has notes and veggies in it
+        // Other Examples: 2 tablespoons apple cider vinegar
         product_entities.forEach(function(product_entity)
         {
           if(product_entity.name != "note")
@@ -329,9 +331,7 @@ async function GenerateRow(res)
   {
     // Add product to dictionary with the measurement and amount if its not in the dictionary
     dict[product] = {[measurement] : numericQuantity(amount)};
-    console.log("numericQuantity(amount)");
-    console.log(amount);
-    console.log(numericQuantity(amount));
+
     dict[product]["category"] = current_entities_category;
   }
   else
@@ -409,10 +409,7 @@ async function fillList()
       Object.keys(dict[key]).forEach(function(second_key)
       {
         current_text_area = document.getElementById((dict[key])[second_key]); 
-        console.log(key);
-        console.log(dict[key]) ;
-        console.log(second_key);
-        console.log((dict[key])[second_key]);
+ 
         current_text_area.value += key + "\n";
         current_text_area.value += "• " + second_key + "\n";
 
@@ -422,6 +419,11 @@ async function fillList()
     }
     else
     {
+
+      //4 English (seedless) cucumbers, thinly sliced
+      // has no product, how to protect against these cases?
+
+      console.log(dict[key]);
       current_text_area = document.getElementById(dict[key]["category"]); 
       
       current_text_area.value += key + "\n";
@@ -440,8 +442,6 @@ async function fillList()
     current_text_area.value += "\n";
 
     current_text_area.style.height = "0px";
-
-    console.log(current_text_area.value);
   });
 };
 
