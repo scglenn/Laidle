@@ -453,8 +453,9 @@ chrome.storage.sync.get('retain_grocery_list' , function(data)
     {
       // Not sure if storage_string needs []
       chrome.storage.sync.get(category_sections[category].storage_string, function(list_data){
-        
+        category_sections[category].text_area_element.style.height = "0px";
         category_sections[category].text_area_element.value = list_data[Object.keys(list_data)[0]];
+        category_sections[category].text_area_element.style.height = category_sections[category].text_area_element.scrollHeight + 10 + "px";
         if(category_sections[category].text_area_element.value == "")
         {
           category_sections[category].div_element.remove();
@@ -462,8 +463,6 @@ chrome.storage.sync.get('retain_grocery_list' , function(data)
       });
     });
    
-    // Todo: Add functionality to resize text areas in the data retention case
-
     transitionLoadingAnimation();
   }
   else
@@ -515,16 +514,16 @@ async function executeGroceryListGeneration()
           {
             category_sections[category].div_element.remove();
           }
+          else
+          {
+            category_sections[category].text_area_element.style.height = category_sections[category].text_area_element.scrollHeight + 10 + "px";
+          }
 
           chrome.storage.sync.set({[category_sections[category].storage_string]: category_sections[category].text_area_element.value}, function(){});
           
         });
   
         chrome.storage.sync.set({retain_grocery_list: true}, function(){});
-
-        $("textarea").each(function(textarea) {
-          $(this).height( $(this)[0].scrollHeight );
-        });
 
         transitionLoadingAnimation();
 
