@@ -254,3 +254,7 @@ label
   background: #555;
 }
 
+textarea
+{
+  height: 0px;
+}

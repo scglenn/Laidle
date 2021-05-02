@@ -416,6 +416,8 @@ async function fillList()
         current_text_area.value += key + "\n";
         current_text_area.value += "• " + second_key + "\n";
 
+        current_text_area.style.height = "0px";
+
       });
     }
     else
@@ -437,6 +439,7 @@ async function fillList()
     // Move on to the next ingredient
     current_text_area.value += "\n";
 
+    current_text_area.style.height = "0px";
 
     console.log(current_text_area.value);
   });
@@ -459,6 +462,8 @@ chrome.storage.sync.get('retain_grocery_list' , function(data)
       });
     });
    
+    // Todo: Add functionality to resize text areas in the data retention case
+
     transitionLoadingAnimation();
   }
   else
@@ -517,8 +522,12 @@ async function executeGroceryListGeneration()
   
         chrome.storage.sync.set({retain_grocery_list: true}, function(){});
 
+        $("textarea").each(function(textarea) {
+          $(this).height( $(this)[0].scrollHeight );
+        });
+
         transitionLoadingAnimation();
-      
+
         }
       );
     });
