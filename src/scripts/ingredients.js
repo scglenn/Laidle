@@ -108,6 +108,7 @@ async function GenerateRow(res)
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
+
     // Access current entity name
     var entity_name = res.entities[key][0].name;
 
@@ -228,10 +229,13 @@ async function GenerateRow(res)
     }
     else if(entity_name == "wit$distance")
     {
+      if(amount_found == false && quantity_found == false)
+      {
       // THIS IS A BANDAID TO TEST WHETHER DISTANCE WORKS 
-      quantity_measurement = res.entities[key][0].unit;
-      quantity_amount = entity_value;
-      quantity_found = true;
+        quantity_measurement = res.entities[key][0].unit;
+        quantity_amount = entity_value;
+        quantity_found = true;
+      }
     }
     else if(entity_name == "note")
     {
@@ -250,10 +254,6 @@ async function GenerateRow(res)
       // To Do: Strategy needs to be developed for how cases like these will be handled
     }
   });
-
-  //Debugging purposes: 
-  //  Output WIT.ai results.
-  console.log(res.entities);
 
   // This large code block is mainly used for special edge cases
   // Logic is needed to see if quantity and amount were found in query
@@ -289,7 +289,7 @@ async function GenerateRow(res)
       // but WIT categorized the same words twice
       // This seems like a bug/bandaid so it may change in the future
       measurement = quantity_measurement;
-      amount = quantity_amount
+      amount = quantity_amount     
     }
   }
   else if(quantity_found)
@@ -318,8 +318,6 @@ async function GenerateRow(res)
     {
       // Purpose: To catch sitations like salt, pepper, tomato, 
       dict["To Taste & Etc"] = {[res.text]:  current_entities_category};
-      //dict["To Taste & Etc"]["category"] = "etc";
-      //dict[product]["category"] = current_entities_category;
     }
     else
     {
@@ -414,7 +412,7 @@ async function fillList()
         current_text_area.value += "• " + second_key + "\n";
         // Move on to the next ingredient
         current_text_area.value += "\n";
-        
+
         current_text_area.style.height = "0px";
 
       });
@@ -424,8 +422,6 @@ async function fillList()
 
       //4 English (seedless) cucumbers, thinly sliced
       // has no product, how to protect against these cases?
-
-      console.log(dict[key]);
       current_text_area = document.getElementById(dict[key]["category"]); 
       
       current_text_area.value += key + "\n";
