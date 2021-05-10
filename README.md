@@ -21,6 +21,29 @@ After a couple hours I realized that I hated the idea of writing logic for parsi
 
 **[Chrome Store Link](https://chrome.google.com/webstore/detail/narwhal/anpnihlhmokhgcdoobohmdbfmibbfgpb)**
 
+## Potential Future Updates
+
+1. Saving website URL to an associated recipe
+2. Functionality for sending an email/notification to the user with the generated list.
+3. Grocery list output gets upgrade UI
+4. Some way of calculating calories
+5. Functionality to search/filter the recipe list saved to the users extension
+6. Functionality for sharing grocery list with someone else
+7. Adding new recipes gets upgraded UI. (allowing user to see the saved data is recognized and can be modified instead of a text area format)
+8. Functionality to recognize how to convert multiple measurements under a product into 1 measurement size (3 tsp = 1 tbs)
+9. Web previews of the recipe from the URL it was copied from
+10. Implement strategy to couple ingredients together better and put similiar named products next to eachother in the grocery list
+11. New Loading Gif for generating the grocery list
+
+## Laidle Version 1.0 Roadmap
+
+1. Train Laidle on the most common food/recipe websites (The 20 most popular or so)
+	- Test 10 recipes per site
+	- Record error rate
+2. Make updates to Wit.ai and chrome extension software based on data collected from training
+3. Give Buy Me A Coffee members early access
+4. Make available on the chrome store
+
 ## Repository Installation
 
 ### Chrome
