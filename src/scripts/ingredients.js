@@ -411,7 +411,9 @@ async function fillList()
  
         current_text_area.value += key + "\n";
         current_text_area.value += "• " + second_key + "\n";
-
+        // Move on to the next ingredient
+        current_text_area.value += "\n";
+        
         current_text_area.style.height = "0px";
 
       });
