@@ -54,8 +54,9 @@ add_btn.onclick = function(element)
 
     // Replace the Fraction Slash character with the Solidus character
     // Limitation: WIT.AI doesnt properly handle the Fraction Slash character
-    text_area.innerHTML = recipe_description.replaceAll(/⁄/gmi,"/");
-
+    text_area.innerHTML = text_area.innerHTML.replaceAll(/⁄/gmi,"/");
+    text_area.value = text_area.value.replaceAll(/⁄/gmi,"/");
+    
     // Not including this case yet, its totally needed for now
     //var empty_lines = recipe_description.match(empty_lines_regex);
 
@@ -241,10 +242,7 @@ function saveChanges()
             {
                 // Push new recipe id string onto the current recipe id list
                 list.recipe_id_list.push(recipe_id_string);
-                chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function(){
-                    // Save the recipe text
-                    doSave();
-                });
+                chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function(){});
                 
             });
         });
