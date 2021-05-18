@@ -36,6 +36,8 @@ add_btn.onclick = function(element)
     // New strategies may be implemented at a later date to handle these cases
     const prohibited_regex = /\+|-/gi;
 
+    const range_regex = /[0-9]+ +to +[0-9]+/gm;
+
     const numbers_only_regex = /^[0-9]+$/gm;
 
     const empty_lines_regex = /^[ \t\n]*$/gm;
@@ -46,7 +48,13 @@ add_btn.onclick = function(element)
     // Find prohibited strings in the recipe description
     var prohibited_strings = recipe_description.match(prohibited_regex);
 
+    var range_strings = recipe_description.match(range_regex);
+
     var numbers_only = recipe_description.match(numbers_only_regex);
+
+    // Replace the Fraction Slash character with the Solidus character
+    // Limitation: WIT.AI doesnt properly handle the Fraction Slash character
+    text_area.innerHTML = recipe_description.replaceAll(/⁄/gmi,"/");
 
     // Not including this case yet, its totally needed for now
     //var empty_lines = recipe_description.match(empty_lines_regex);
@@ -78,6 +86,11 @@ add_btn.onclick = function(element)
     {
         //
         alert('Format Error!', "Lines containing only numbers", 'alert-danger');
+    }
+    else if(range_strings != null)
+    {
+        // Range found in recipe triggers an alert
+        alert('Error!', "Remove descriptions of ranges such as: '1 to 2' ", 'alert-danger');
     }
     else
     {
@@ -228,7 +241,11 @@ function saveChanges()
             {
                 // Push new recipe id string onto the current recipe id list
                 list.recipe_id_list.push(recipe_id_string);
-                chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function(){});
+                chrome.storage.sync.set({'recipe_id_list' : list.recipe_id_list}, function(){
+                    // Save the recipe text
+                    doSave();
+                });
+                
             });
         });
     }

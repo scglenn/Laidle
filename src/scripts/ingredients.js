@@ -258,6 +258,9 @@ async function GenerateRow(res)
   // Logic is needed to see if quantity and amount were found in query
   if(quantity_found && amount_found)
   {
+
+    console.log(res.entities);
+
     // Regular expression to search for the occurances of amount
     var reg_exp = new RegExp(amount,"gi");
     var amount_count = res.text.match(reg_exp).length;
@@ -307,7 +310,7 @@ async function GenerateRow(res)
   }
 
 
-  if((measurement == "whole" && amount == ""))
+  if((measurement == "whole" && amount == "") || (measurement == "pinch"  && amount == ""))
   {
     // This is a special edge case where a specific amount and measurement were not provided
     // Its mainly for recipes that mention ingredients "To Taste"
@@ -556,7 +559,7 @@ async function awaitForWITReponse(each_ingredient)
 
     // The API code used to make requests to Food Bro
     // Food Bro is the name of the WIT API bot
-    const auth = 'Bearer ' + 'GKTBGOKLKBEQA26XNZSLM6SSNU4A7XJR';
+    const auth = 'Bearer ' + 'V7XRM5D3S3VBOYQZE4XMPOQTFVW4CKHC';
 
     // Make a wit.ai request for each ingredient
     each_ingredient.forEach( row => 
