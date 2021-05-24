@@ -104,18 +104,21 @@ async function GenerateRow(res)
   var quantity_found = false;
 
   var current_entities_category =  "etc";
-  
-  console.log(res.entities);
 
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
 
     // Access current entity name
-    var entity_name = res.entities[key][0].name;
+    var entity_name = res.entities[key][0].name.toLowerCase();
 
     // Access current entity value
     var entity_value = res.entities[key][0].value;
+
+    if(typeof(entity_value) == "string")
+    {
+      entity_value = entity_value.toLowerCase();
+    }
 
     // Check which entity name was received
     if(entity_name == "measurement")
@@ -132,7 +135,7 @@ async function GenerateRow(res)
 
       if(product_entities[0] != null)
       {
-        let entity_name =  "etc";
+        let entity_name =  "";
 
         let same_categories = true;
 
@@ -178,13 +181,57 @@ async function GenerateRow(res)
               entity_name = "etc";
             }
           }
+          else
+          {
+            entity_name = "etc";
+          }
         });
 
         // This case will categorize a product into the "etc" category if it has multiple sub-entities of different categories
         // For now this is a bandaid until a more sophisticated strategy is developed to handle this edge case
         if(same_categories == false)
         {
-          current_entities_category = "etc";
+          console.log("same category?");
+          // Priority Strategy
+          // Description: Some category entities should take prescedent over others.
+          // 1. Frozen
+          // --- Override:
+          // ------ Product Text: "Frozen"
+          // 2. Etc
+          // --- Override:
+          // ------ Product Text: "Dry", "Dried"
+          // ------ Measurement Text: "Canned"
+          // 3. Vegetable
+          // --- Override:
+          // ------ Product Text: "Fresh" (if a vegetable entity is found)
+          // 4. Fruit
+          // 5. Seafood
+
+          const fridge_regex = new RegExp(/frozen /gim);
+          var fridge_edge_case = product.match(fridge_regex);
+
+          const etc_regex = new RegExp(/(dry |dried )/gim);
+          var etc_edge_case = product.match(etc_regex);
+
+          const veggie_regex = new RegExp(/(fresh )/gim);
+          var veggie_edge_case = product.match(veggie_regex);
+
+          if(fridge_edge_case != null && fridge_edge_case.length > 0)
+          {
+            current_entities_category = "fridge";
+          }
+          else if(etc_edge_case != null && etc_edge_case.length > 0)
+          {
+            current_entities_category = "etc";
+          }
+          else if(veggie_edge_case != null && veggie_edge_case.length > 0)
+          {
+            current_entities_category = "vegetable";
+          }
+          else
+          {
+            current_entities_category = "etc";
+          }
         }
         else
         {
@@ -260,8 +307,6 @@ async function GenerateRow(res)
   // Logic is needed to see if quantity and amount were found in query
   if(quantity_found && amount_found)
   {
-
-    console.log(res.entities);
 
     // Regular expression to search for the occurances of amount
     var reg_exp = new RegExp(amount,"gi");
