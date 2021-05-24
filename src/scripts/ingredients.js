@@ -105,6 +105,8 @@ async function GenerateRow(res)
 
   var current_entities_category =  "etc";
   
+  console.log(res.entities);
+
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
@@ -130,7 +132,7 @@ async function GenerateRow(res)
 
       if(product_entities[0] != null)
       {
-        let entity_name =  "";
+        let entity_name =  "etc";
 
         let same_categories = true;
 
