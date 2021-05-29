@@ -32,6 +32,7 @@ var recipeName = document.getElementById('recipeName');
 // The user is redirected to the recipe list page
 add_btn.onclick = function(element) 
 {
+    doSave();
     // This regex finds "+" and "-"
     // New strategies may be implemented at a later date to handle these cases
     const prohibited_regex = / +\+ +| +- +| +or +/gi;
@@ -57,8 +58,23 @@ add_btn.onclick = function(element)
     text_area.innerHTML = text_area.innerHTML.replaceAll(/⁄/gmi,"/");
     text_area.value = text_area.value.replaceAll(/⁄/gmi,"/");
     
+    console.log(text_area.innerHTML);
+    console.log(text_area.value);
     // Not including this case yet, its totally needed for now
     //var empty_lines = recipe_description.match(empty_lines_regex);
+
+    // Replace fractions with decimal numbers
+    const fraction_regex = new RegExp(/[0-9]*\.?[0-9] *[0-9][0-9]*\/[0-9][0-9]*/gi);
+    var fraction_edge_case = text_area.value.match(fraction_regex);
+
+    if(fraction_edge_case != null && fraction_edge_case.length > 0)
+    {
+        fraction_edge_case.forEach(element => {
+            text_area.innerHTML = text_area.innerHTML.replace(element,numericQuantity(element));
+            text_area.value = text_area.value.replace(element,numericQuantity(element));
+        });
+    }
+
 
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
@@ -150,30 +166,6 @@ document.addEventListener('DOMContentLoaded', function ()
         }
     };
 
-    // Saves the recipe fields to the page on load storage variable
-    // Purpose: When the user clicks away from the chrome extension, the page will close
-    // and this causes any changes to be lost. By saving the most recent changes to page_on_load
-    // the user can open the chrome extension back where they left off.
-    function doSave() 
-    {
-        // Access the name of the recipe
-        var rec_title = recipeName.value;
-
-        // Access the description of the recipe
-        text_area = document.getElementById('recipeDescription');
-
-        // Recipe description text
-        var rec_desc = encodeURIComponent(text_area.value);
-
-        // Generate the page URL to be saved
-        var page = "../views/recipe.html?recipe_name="+rec_title+"&recipe_description="+rec_desc+"&recipe_id="+rec_id+"";
-    
-        // Store the page url
-        // Note: This page url will be saved upon the chrome extension losing focus and 
-        // loaded upon the chrome extension gaining focus
-        chrome.storage.sync.set({page_on_load: page}, function(){});
-    };
-
     // Update the recipe name field at the top of the page with the recipe name passed
     // from the previous page
     // INVESTIGATION REQUIRED: This looks like a bandaid, can we fix this up?
@@ -206,6 +198,30 @@ document.addEventListener('DOMContentLoaded', function ()
     // Fade in recipe page
     fadeInUpAnimation();
 });
+
+// Saves the recipe fields to the page on load storage variable
+// Purpose: When the user clicks away from the chrome extension, the page will close
+// and this causes any changes to be lost. By saving the most recent changes to page_on_load
+// the user can open the chrome extension back where they left off.
+function doSave() 
+{
+    // Access the name of the recipe
+    var rec_title = recipeName.value;
+
+    // Access the description of the recipe
+    text_area = document.getElementById('recipeDescription');
+
+    // Recipe description text
+    var rec_desc = encodeURIComponent(text_area.value);
+
+    // Generate the page URL to be saved
+    var page = "../views/recipe.html?recipe_name="+rec_title+"&recipe_description="+rec_desc+"&recipe_id="+rec_id+"";
+
+    // Store the page url
+    // Note: This page url will be saved upon the chrome extension losing focus and 
+    // loaded upon the chrome extension gaining focus
+    chrome.storage.sync.set({page_on_load: page}, function(){});
+};
 
 // This function saves the recipe data from this page into local storage.
 function saveChanges() 
