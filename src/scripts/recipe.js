@@ -58,8 +58,6 @@ add_btn.onclick = function(element)
     text_area.innerHTML = text_area.innerHTML.replaceAll(/⁄/gmi,"/");
     text_area.value = text_area.value.replaceAll(/⁄/gmi,"/");
     
-    console.log(text_area.innerHTML);
-    console.log(text_area.value);
     // Not including this case yet, its totally needed for now
     //var empty_lines = recipe_description.match(empty_lines_regex);
 
