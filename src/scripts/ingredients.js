@@ -606,7 +606,7 @@ async function awaitForWITReponse(each_ingredient)
 
     // The API code used to make requests to Food Bro
     // Food Bro is the name of the WIT API bot
-    const auth = 'Bearer ' + 'V7XRM5D3S3VBOYQZE4XMPOQTFVW4CKHC';
+    const auth = 'Bearer ' + 'X7NBY3LFBNFDTYZT35ZLOFBUNOY7X4A5';
 
     // Make a wit.ai request for each ingredient
     each_ingredient.forEach( row => 
@@ -620,7 +620,7 @@ async function awaitForWITReponse(each_ingredient)
         
         // Keys needed to run this. Keeping this data in private for now.
         // HTTP request for wit.ai to parse the ingredient string
-        const uri = 'https://api.wit.ai/message?v=20210122&q=' + q;
+        const uri = 'https://api.wit.ai/message?v=20210529&q=' + q;
         
         // Create fetch function with a unique uri
         var fetch_func = fetch(uri, {headers: {Authorization: auth}})

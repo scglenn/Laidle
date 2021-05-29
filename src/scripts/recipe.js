@@ -34,8 +34,8 @@ add_btn.onclick = function(element)
 {
     // This regex finds "+" and "-"
     // New strategies may be implemented at a later date to handle these cases
-    const prohibited_regex = /\+|-/gi;
-
+    const prohibited_regex = / +\+ +| +- +| +or +/gi;
+    
     const range_regex = /[0-9]+ +to +[0-9]+/gm;
 
     const numbers_only_regex = /^[0-9]+$/gm;
