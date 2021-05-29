@@ -183,7 +183,10 @@ async function GenerateRow(res)
           }
           else
           {
-            entity_name = "etc";
+            if(entity_name == "")
+            {
+              entity_name = "etc";
+            }
           }
         });
 
