@@ -81,7 +81,7 @@ add_btn.onclick = function(element)
     else if(prohibited_strings != null)
     {
         // Prohibited strings trigger an alert
-        alert('Error!', "Prohibited text: '+' '-' ", 'alert-danger');
+        alert('Error!', "Prohibited text:  + , - , or  ", 'alert-danger');
     }
     else if(numbers_only != null)
     {
