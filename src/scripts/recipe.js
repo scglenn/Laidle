@@ -57,22 +57,12 @@ add_btn.onclick = function(element)
     // Limitation: WIT.AI doesnt properly handle the Fraction Slash character
     text_area.innerHTML = text_area.innerHTML.replaceAll(/⁄/gmi,"/");
     text_area.value = text_area.value.replaceAll(/⁄/gmi,"/");
+
+    // Replace conjunctive fractions with decimal numbers
+    replaceToDecimal(text_area,/[0-9]*\.?[0-9] *[0-9][0-9]*\/[0-9][0-9]*/gi);
     
-    // Not including this case yet, its totally needed for now
-    //var empty_lines = recipe_description.match(empty_lines_regex);
-
-    // Replace fractions with decimal numbers
-    const fraction_regex = new RegExp(/[0-9]*\.?[0-9] *[0-9][0-9]*\/[0-9][0-9]*/gi);
-    var fraction_edge_case = text_area.value.match(fraction_regex);
-
-    if(fraction_edge_case != null && fraction_edge_case.length > 0)
-    {
-        fraction_edge_case.forEach(element => {
-            text_area.innerHTML = text_area.innerHTML.replace(element,numericQuantity(element));
-            text_area.value = text_area.value.replace(element,numericQuantity(element));
-        });
-    }
-
+    // Replace singular fractions with decimal numbers
+    replaceToDecimal(text_area,/[0-9][0-9]*\/[0-9][0-9]*/gi);
 
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
@@ -268,4 +258,19 @@ function saveChanges()
     }
 
     chrome.storage.sync.set({retain_grocery_list: false}, function(){});
+}
+
+function replaceToDecimal(text,regex)
+{
+    let fraction_regex = new RegExp(regex);
+    
+    let fraction_edge_case = text.value.match(fraction_regex);
+
+    if(fraction_edge_case != null && fraction_edge_case.length > 0)
+    {
+        fraction_edge_case.forEach(element => {
+            text.innerHTML = text.innerHTML.replace(element,numericQuantity(element));
+            text.value = text.value.replace(element,numericQuantity(element));
+        });
+    }
 }
