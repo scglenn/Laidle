@@ -259,3 +259,15 @@ textarea
   height: 0px;
   margin-bottom: 2em;
 }
+
+#qrcode
+{
+  text-align: center;
+}
+
+#qrcode canvas
+{
+  background-color: white;
+  padding: 0.5em;
+
+}

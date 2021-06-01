@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
     <!-- Boostrap 4 CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="../stylesheets/ingredients.css" >
@@ -85,12 +86,14 @@
               </div>
               
             </div>
+            <div id="qrcode"></div>
           <button id="back" type="button" class="btn btn-secondary">
               Back
           </button>
       </form>
     </div>
-
+    
+    <script src="..\..\node_modules\easyqrcodejs\src\easy.qrcode.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://unpkg.com/numeric-quantity"></script>
     <script type="module" src="../scripts/ingredients.js"></script>
      <!-- Boostrap JS -->

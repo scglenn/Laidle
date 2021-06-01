@@ -16,6 +16,11 @@ import {fadeInUpAnimation,fadeOutDownAnimation,initializeAnimation } from './pag
 //This dictionary holds all the information received from wit.ai
 var dict = {};
 
+var qrtext = "";
+
+// Qr Code Object
+var qrcode = undefined;
+
 // List of category objects
 // a) Text area displays the ingredients 
 // b) Div element surrounding the section
@@ -105,6 +110,8 @@ async function GenerateRow(res)
 
   var current_entities_category =  "etc";
 
+  console.log(res.entities);
+
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
@@ -183,7 +190,7 @@ async function GenerateRow(res)
           }
           else
           {
-            if(entity_name == "")
+            if(entity_name == "" && product_entity.name != "measurement")
             {
               entity_name = "etc";
             }
@@ -495,7 +502,7 @@ async function fillList()
   });
 };
 
-chrome.storage.sync.get('retain_grocery_list' , function(data) 
+chrome.storage.sync.get('retain_grocery_list' , async function(data) 
 {
   if(data.retain_grocery_list == true)
   {
@@ -514,6 +521,8 @@ chrome.storage.sync.get('retain_grocery_list' , function(data)
     });
    
     transitionLoadingAnimation();
+
+    await generateQR();
   }
   else
   {
@@ -594,7 +603,7 @@ function transitionLoadingAnimation()
     document.getElementById('loading-wrapper').style.visibility = "hidden";
 
     // Once text area has data written to it, allow the page to fade in and hide the loading gif
-    fadeInUpAnimation();
+    fadeInUpAnimation();    
 }
 
 // Executes multiple fetch requests to the WIT API
@@ -658,3 +667,49 @@ async function awaitForWITReponse(each_ingredient)
     });    
   });
 }
+
+async function generateQR() {
+  
+  qrtext="";
+
+  return new Promise(function(resolve){
+    setTimeout(function() {
+      Object.keys(category_sections).forEach(category=> 
+      {
+        qrtext += category_sections[category].text_area_element.value;
+      });
+      
+      // https://www.npmjs.com/package/easyqrcodejs
+      // Create QRCode Object
+      if(qrcode ==undefined)
+      {
+        qrcode = new QRCode(document.getElementById("qrcode"), {text: qrtext, width: 256, height: 256, correctLevel : QRCode.CorrectLevel.L /* L, M, Q, H*/})
+      }
+      else
+      {
+        qrcode.makeCode(qrtext);
+      }
+    },500);
+  });
+}
+
+// CSS Selector associated with recipe name and recipe description fields
+const STORAGE_SELECTOR = '.form-control[id]';
+
+// Used to save changes and inputs made to the recipe fields
+let debounceTimer;
+
+// Adding SaveOnChange function to the change and input event listeners
+document.addEventListener('change', saveOnChange);
+document.addEventListener('input', saveOnChange);
+
+// Used to identify which field is being changed
+// Triggers the functionality to save changes
+function saveOnChange(e) 
+{
+    if (e.target.closest(STORAGE_SELECTOR)) 
+    {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(generateQR, 100);
+    }
+};
