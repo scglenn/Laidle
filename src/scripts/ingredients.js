@@ -463,16 +463,27 @@ async function fillList()
 
     if(key == "To Taste & Etc")
     {
+      let to_taste_text_added = {};
+
       Object.keys(dict[key]).forEach(function(second_key)
       {
-        current_text_area = document.getElementById((dict[key])[second_key]); 
- 
-        current_text_area.value += key + "\n";
+        if(((dict[key])[second_key] in to_taste_text_added) == false)
+        {
+          if(current_text_area != undefined)
+          {
+            current_text_area.value += "\n";
+          }
+          
+          current_text_area = document.getElementById((dict[key])[second_key]); 
+          current_text_area.value += key + "\n";
+          to_taste_text_added[ (dict[key])[second_key] ] = true;
+        }
+        console.log(second_key);
         current_text_area.value += "• " + second_key + "\n";
-        current_text_area.value += "\n";
         current_text_area.style.height = "0px";
-
       });
+
+      current_text_area.value += "\n";
     }
     else
     {
@@ -494,6 +505,7 @@ async function fillList()
       });
     }
 
+    
     current_text_area.style.height = "0px";
   });
 };
