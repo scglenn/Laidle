@@ -469,9 +469,7 @@ async function fillList()
  
         current_text_area.value += key + "\n";
         current_text_area.value += "• " + second_key + "\n";
-        // Move on to the next ingredient
         current_text_area.value += "\n";
-
         current_text_area.style.height = "0px";
 
       });
@@ -491,12 +489,10 @@ async function fillList()
         if(second_key != "category")
         {
           // Insert number of measurements for the product
-          current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
+          current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n\n";
         }
       });
     }
-    // Move on to the next ingredient
-    current_text_area.value += "\n";
 
     current_text_area.style.height = "0px";
   });
@@ -519,10 +515,10 @@ chrome.storage.sync.get('retain_grocery_list' , async function(data)
         }
       });
     });
-   
+
     transitionLoadingAnimation();
 
-    await generateQR();
+    setTimeout(function() {generateQR()},1500);
   }
   else
   {
@@ -585,6 +581,8 @@ async function executeGroceryListGeneration()
         chrome.storage.sync.set({retain_grocery_list: true}, function(){});
 
         transitionLoadingAnimation();
+
+        setTimeout(function() {generateQR()},1500);
 
         }
       );
@@ -673,15 +671,19 @@ async function generateQR() {
   qrtext="";
 
   return new Promise(function(resolve){
-    setTimeout(function() {
       Object.keys(category_sections).forEach(category=> 
       {
-        qrtext += category_sections[category].text_area_element.value;
+        if(category_sections[category].text_area_element.value != "")
+        {
+          qrtext += "----------" + category + "----------\n\n";
+          qrtext += category_sections[category].text_area_element.value;
+          qrtext += "\n";
+        }
       });
       
       // https://www.npmjs.com/package/easyqrcodejs
       // Create QRCode Object
-      if(qrcode ==undefined)
+      if(qrcode == undefined)
       {
         qrcode = new QRCode(document.getElementById("qrcode"), {text: qrtext, width: 256, height: 256, correctLevel : QRCode.CorrectLevel.L /* L, M, Q, H*/})
       }
@@ -689,7 +691,6 @@ async function generateQR() {
       {
         qrcode.makeCode(qrtext);
       }
-    },500);
   });
 }
 

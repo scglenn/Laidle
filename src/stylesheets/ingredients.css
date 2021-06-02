@@ -269,5 +269,12 @@ textarea
 {
   background-color: white;
   padding: 0.5em;
+}
 
+#back
+{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 1em;
 }
