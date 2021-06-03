@@ -80,7 +80,7 @@ async function GenerateRow(res)
   }
 
   // The name of an ingredient in the recipe
-  var product = "Unknown Product";
+  var product = res.text; //"Unknown Product";
 
   // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
   // Example: 1 tomato is just a whole tomato.
@@ -108,8 +108,10 @@ async function GenerateRow(res)
   // This keeps track of whether wit found a "quanitity" entity.
   var quantity_found = false;
 
-  var current_entities_category =  "etc";
+  var product_found = false;
 
+  var current_entities_category =  "etc";
+  console.log(res);
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
@@ -132,6 +134,9 @@ async function GenerateRow(res)
     }
     else if(entity_name == "product")
     {
+
+      product_found = true;
+
       product = entity_value;
 
       // For now the first entity is what is going to determine the category
@@ -149,48 +154,51 @@ async function GenerateRow(res)
         // Other Examples: 2 tablespoons apple cider vinegar
         product_entities.forEach(function(product_entity)
         {
-          if(product_entity.name != "note")
+          if(product_entity.name != "measurement")
           {
-            // Todo: Make a dictionary of the entities instead of having a large if else structure
-            // Todo: Strategy should be created to determine how to categorize multiple entities under one product
-            if(product_entity.name != entity_name && entity_name != "")
+            if(product_entity.name != "note" )
             {
-              same_categories = false;
-            }
-            else if( product_entity.name == "vegetable")
-            {
-              entity_name = product_entity.name; 
-            }
-            else if (product_entity.name == "fruit")
-            {
-              entity_name = product_entity.name; 
-            }
-            else if(product_entity.name == "meat")
-            {
-              entity_name = product_entity.name; 
-            }
-            else if (product_entity.name == "fridge")
-            {
-              entity_name = product_entity.name; 
-            }
-            else if (product_entity.name == "seafood")
-            {
-              entity_name = product_entity.name; 
-            }
-            else if (product_entity.name == "Freezer")
-            {
-              entity_name = product_entity.name; 
+              // Todo: Make a dictionary of the entities instead of having a large if else structure
+              // Todo: Strategy should be created to determine how to categorize multiple entities under one product
+              if(product_entity.name != entity_name && entity_name != "")
+              {
+                same_categories = false;
+              }
+              else if( product_entity.name == "vegetable")
+              {
+                entity_name = product_entity.name; 
+              }
+              else if (product_entity.name == "fruit")
+              {
+                entity_name = product_entity.name; 
+              }
+              else if(product_entity.name == "meat")
+              {
+                entity_name = product_entity.name; 
+              }
+              else if (product_entity.name == "fridge")
+              {
+                entity_name = product_entity.name; 
+              }
+              else if (product_entity.name == "seafood")
+              {
+                entity_name = product_entity.name; 
+              }
+              else if (product_entity.name == "Freezer")
+              {
+                entity_name = product_entity.name; 
+              }
+              else
+              {
+                entity_name = "etc";
+              }
             }
             else
             {
-              entity_name = "etc";
-            }
-          }
-          else
-          {
-            if(entity_name == "" && product_entity.name != "measurement")
-            {
-              entity_name = "etc";
+              if(entity_name == "")
+              {
+                entity_name = "etc";
+              }
             }
           }
         });
@@ -250,7 +258,8 @@ async function GenerateRow(res)
         {
           let dry_good_check = res.entities['measurement:measurement'][0].value.includes("can") ||
                                product.includes("oil") || product.includes("sauce") || product.includes("chip") || 
-                               product.includes("powder") || product.includes("juice") || product.includes("dried") || product.includes("dry");
+                               product.includes("powder") || product.includes("juice") || product.includes("dried") || 
+                               product.includes("dry") ||  product.includes("pickled");
           
           if ( dry_good_check == true )
           {
@@ -302,8 +311,18 @@ async function GenerateRow(res)
     {
       // Items that fall into that case would be if a vegetable,fruit,meat, etc has been found by wit but not under a "product"
       // To Do: Strategy needs to be developed for how cases like these will be handled
+
     }
   });
+
+  // Bandaid solution for unknown products
+  if(product_found == false)
+  {
+    amount_found = false;
+    quantity_found = false;
+    amount = "";
+    measurement = "whole";
+  }
 
   // This large code block is mainly used for special edge cases
   // Logic is needed to see if quantity and amount were found in query
@@ -332,7 +351,7 @@ async function GenerateRow(res)
     {
       // Edge case where a recipe states something like:
       // 2 (8 oz) cans of stuff
-      measurement = "(" + quantity_amount + " " + quantity_measurement + " Per " + measurement + ")";
+      measurement = measurement + " (" + quantity_amount + " " + quantity_measurement +")";
     }
     else
     {
