@@ -110,8 +110,6 @@ async function GenerateRow(res)
 
   var current_entities_category =  "etc";
 
-  console.log(res.entities);
-
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
@@ -252,7 +250,7 @@ async function GenerateRow(res)
         {
           let dry_good_check = res.entities['measurement:measurement'][0].value.includes("can") ||
                                product.includes("oil") || product.includes("sauce") || product.includes("chip") || 
-                               product.includes("powder") || product.includes("juice");
+                               product.includes("powder") || product.includes("juice") || product.includes("dried") || product.includes("dry");
           
           if ( dry_good_check == true )
           {
@@ -262,18 +260,8 @@ async function GenerateRow(res)
       }
       else
       {
-        let dry_good_check = product.includes("oil") || product.includes("sauce") || product.includes("chip") || product.includes("juice");
-
-        if ( dry_good_check == true )
-        {
-          current_entities_category = "etc"//"dry goods";
-        }
-        else
-        {
-          current_entities_category = "etc";
-        }
+        current_entities_category = "etc"; 
       }
-
     }
     else if(entity_name == "wit$quantity")
     {
@@ -305,6 +293,10 @@ async function GenerateRow(res)
       //  This case catches any other entities. Mostly just wit$number and amount. Only numbers for now.
       amount_found = true;
       amount = entity_value;
+    }
+    else if(entity_name.match(/fridge|fruit|meat|seafood|vegetable|etc/gi) != null)
+    {
+      current_entities_category = entity_name;
     }
     else
     {
@@ -468,22 +460,26 @@ async function fillList()
       Object.keys(dict[key]).forEach(function(second_key)
       {
         if(((dict[key])[second_key] in to_taste_text_added) == false)
-        {
-          if(current_text_area != undefined)
-          {
-            current_text_area.value += "\n";
-          }
-          
+        { 
           current_text_area = document.getElementById((dict[key])[second_key]); 
           current_text_area.value += key + "\n";
           to_taste_text_added[ (dict[key])[second_key] ] = true;
         }
-        console.log(second_key);
+        else
+        {
+          current_text_area = document.getElementById((dict[key])[second_key]);
+        }
+
         current_text_area.value += "• " + second_key + "\n";
         current_text_area.style.height = "0px";
       });
 
-      current_text_area.value += "\n";
+      Object.keys(to_taste_text_added).forEach(function(section)
+      {
+        current_text_area = document.getElementById(section); 
+        current_text_area.value += "\n";
+      });
+
     }
     else
     {
