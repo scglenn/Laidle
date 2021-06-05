@@ -33,9 +33,10 @@ var recipeName = document.getElementById('recipeName');
 add_btn.onclick = function(element) 
 {
     doSave();
+
     // This regex finds: " + " | " - " | " or " | " to "
     // New strategies may be implemented at a later date to handle these cases
-    const prohibited_regex = / +\+ +|[ |0-9]+-[ |0-9]+| +or +|[ |0-9]+to[ |0-9]+/gi;
+    const prohibited_regex = / *\+ *|[0-9]+ *- *[0-9]+| +or +|[0-9]+ +to +[0-9]+/gi;
     
     const range_regex = /[0-9]+ +to +[0-9]+/gm;
 
@@ -52,21 +53,6 @@ add_btn.onclick = function(element)
     var range_strings = recipe_description.match(range_regex);
 
     var numbers_only = recipe_description.match(numbers_only_regex);
-
-    // Replace the Fraction Slash character with the Solidus character
-    // Limitation: WIT.AI doesnt properly handle the Fraction Slash character
-    text_area.innerHTML = text_area.innerHTML.replaceAll(/⁄/gmi,"/");
-    text_area.value = text_area.value.replaceAll(/⁄/gmi,"/");
-
-    // Replace conjunctive fractions with decimal numbers
-    replaceToDecimal(text_area,/[0-9]*\.?[0-9] *[0-9][0-9]*\/[0-9][0-9]*/gi);
-
-    // Replace singular fractions with decimal numbers
-    replaceToDecimal(text_area,/[0-9][0-9]*\/[0-9][0-9]*/gi);
-
-    // Remove hyphen characters
-    text_area.innerHTML = text_area.innerHTML.replaceAll(/-/gmi," ");
-    text_area.value = text_area.value.replaceAll(/-/gmi," ");
 
     // Grab the latest recipe name value
     var recipe_name = recipeName.value;
@@ -103,6 +89,21 @@ add_btn.onclick = function(element)
     }
     else
     {
+        // Replace the Fraction Slash character with the Solidus character
+        // Limitation: WIT.AI doesnt properly handle the Fraction Slash character
+        text_area.innerHTML = text_area.innerHTML.replaceAll(/⁄/gmi,"/");
+        text_area.value = text_area.value.replaceAll(/⁄/gmi,"/");
+
+        // Replace conjunctive fractions with decimal numbers
+        replaceToDecimal(text_area,/[0-9]*\.?[0-9] *[0-9][0-9]*\/[0-9][0-9]*/gi);
+
+        // Replace singular fractions with decimal numbers
+        replaceToDecimal(text_area,/[0-9][0-9]*.?\/.?[0-9][0-9]*/gi);
+
+        // Remove hyphen characters
+        text_area.innerHTML = text_area.innerHTML.replaceAll(/-/gmi," ");
+        text_area.value = text_area.value.replaceAll(/-/gmi," ");
+
         // Save recipe to storage variables
         saveChanges();
 
