@@ -80,7 +80,7 @@ async function GenerateRow(res)
   }
 
   // The name of an ingredient in the recipe
-  var product = res.text; //"Unknown Product";
+  var product = res.text;
 
   // Limitation: It is assumed that if a measurement is not received from wit than the product doesnt need one
   // Example: 1 tomato is just a whole tomato.
@@ -111,7 +111,7 @@ async function GenerateRow(res)
   var product_found = false;
 
   var current_entities_category =  "etc";
-  console.log(res);
+
   // Iterate through the entities received from wit.ai
   Object.keys(res.entities).forEach(function(key) 
   {
@@ -202,6 +202,13 @@ async function GenerateRow(res)
             }
           }
         });
+
+        // Category entity wasnt resolved by WIT
+        // Edge case where category entity was not found
+        if(entity_name == "")
+        {
+          entity_name = "etc";
+        }
 
         // This case will categorize a product into the "etc" category if it has multiple sub-entities of different categories
         // For now this is a bandaid until a more sophisticated strategy is developed to handle this edge case

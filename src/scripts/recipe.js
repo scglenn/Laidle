@@ -35,7 +35,7 @@ add_btn.onclick = function(element)
     doSave();
     // This regex finds: " + " | " - " | " or " | " to "
     // New strategies may be implemented at a later date to handle these cases
-    const prohibited_regex = / +\+ +| +- +| +or +| +to +/gi;
+    const prohibited_regex = / +\+ +|[ |0-9]+-[ |0-9]+| +or +|[ |0-9]+to[ |0-9]+/gi;
     
     const range_regex = /[0-9]+ +to +[0-9]+/gm;
 
