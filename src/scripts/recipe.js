@@ -33,9 +33,10 @@ var recipeName = document.getElementById('recipeName');
 add_btn.onclick = function(element) 
 {
     doSave();
+
     // This regex finds: " + " | " - " | " or " | " to "
     // New strategies may be implemented at a later date to handle these cases
-    const prohibited_regex = / +\+ +|[ |0-9]+-[ |0-9]+| +or +|[ |0-9]+to[ |0-9]+/gi;
+    const prohibited_regex = / *\+ *|[0-9]+ *- *[0-9]+| +or +|[0-9]+ +to +[0-9]+/gi;
     
     const range_regex = /[0-9]+ +to +[0-9]+/gm;
 
@@ -97,7 +98,7 @@ add_btn.onclick = function(element)
         replaceToDecimal(text_area,/[0-9]*\.?[0-9] *[0-9][0-9]*\/[0-9][0-9]*/gi);
 
         // Replace singular fractions with decimal numbers
-        replaceToDecimal(text_area,/[0-9][0-9]*\/[0-9][0-9]*/gi);
+        replaceToDecimal(text_area,/[0-9][0-9]*.?\/.?[0-9][0-9]*/gi);
 
         // Remove hyphen characters
         text_area.innerHTML = text_area.innerHTML.replaceAll(/-/gmi," ");
