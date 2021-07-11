@@ -522,9 +522,11 @@ async function fillList()
         if(second_key != "category")
         {
           // Insert number of measurements for the product
-          current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n\n";
+          current_text_area.value += "• " + (dict[key])[second_key] + " " + second_key + "\n";
         }
       });
+
+      current_text_area.value += "\n";
     }
 
     
