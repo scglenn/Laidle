@@ -19,8 +19,6 @@ I usually find 5 recipes online and proceed write up a grocery list that doesnt 
 
 After a couple hours I realized that I hated the idea of writing logic for parsing ingredient text. So I figured I could train Wit.ai to do it for me! Thus Laidle was born!
 
-**[Chrome Store Link](https://chrome.google.com/webstore/detail/narwhal/anpnihlhmokhgcdoobohmdbfmibbfgpb)**
-
 ## Potential Future Updates
 
 1. Saving website URL to an associated recipe
